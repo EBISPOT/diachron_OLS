@@ -16,8 +16,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,7 +31,7 @@ public class OWLOntologyToDiachronConverter {
     private OWLOntologyManager manager;
     private DiachronDataset dataset;
 
-    public OWLOntologyToDiachronConverter (File ontologyFile, String name, String version, Collection<URI> predicateFilters) {
+    public OWLOntologyToDiachronConverter (InputStream ontologyFile, String name, String version, Collection<URI> predicateFilters) {
 
 
         try {
@@ -64,16 +63,16 @@ public class OWLOntologyToDiachronConverter {
             this.dataset = new DiachronDataset(ontology.getOntologyID().getOntologyIRI().toURI(), name, version);
 
             RDFGraph graph = visitor.getGraph();
-            int limit = 10;
-            int x = 0;
+//            int limit = 10;
+//            int x = 0;
             for (OWLClass entity : reasonedOntology.getClassesInSignature()) {
 
-                if (x < limit) {
-                    x++;
-                }
-                else {
-                    break;
-                }
+//                if (x < limit) {
+//                    x++;
+//                }
+//                else {
+//                    break;
+//                }
 
                 System.out.println("Triples for " + entity.getIRI().toURI().toString());
 
@@ -108,15 +107,23 @@ public class OWLOntologyToDiachronConverter {
 
         Collection<URI> filter = new HashSet<URI>();
         filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
-        OWLOntologyToDiachronConverter converter = new OWLOntologyToDiachronConverter(new File("/Users/jupp/dev/ontology_dev/efo/svn/ExFactorInOWL/currentrelease/eforelease/efo.owl"), "efo", "2.44", filter );
 
-        DiachronJenaModel model = new DiachronJenaModel(converter.getDiachronDataset());
+
+        OWLOntologyToDiachronConverter converter = null;
         try {
-            model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-2.44.rdf.xml"), "RDF/XML");
-            model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-2.44.rdf.n3"), "N3");
+            converter = new OWLOntologyToDiachronConverter(new BufferedInputStream(new FileInputStream(new File("/Users/jupp/dev/ontology_dev/efo/svn/ExFactorInOWL/currentrelease/eforelease/efo.owl"))), "efo", "2.44", filter );
+            DiachronJenaModel model = new DiachronJenaModel(converter.getDiachronDataset());
+                    try {
+                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-2.44.rdf.xml"), "RDF/XML");
+                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-2.44.rdf.n3"), "N3");
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+
 
     }
 
