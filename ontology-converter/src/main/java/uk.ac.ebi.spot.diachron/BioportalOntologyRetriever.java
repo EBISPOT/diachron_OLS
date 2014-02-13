@@ -16,11 +16,11 @@ import java.util.*;
  */
 public class BioportalOntologyRetriever {
 
-    private static String KEY = "0911d614-1dd4-41c0-afd4-9f3df0fc70be";
+    private String apikey;
     private static String SERVICE = "http://data.bioontology.org/ontologies/";
 
-    public BioportalOntologyRetriever() {
-
+    public BioportalOntologyRetriever(String apikey) {
+        this.apikey = apikey;
     }
 
     public Map<String, String> getAllSubmissionId(String ontologyName) {
@@ -28,7 +28,7 @@ public class BioportalOntologyRetriever {
         Map<String, String> submissionIds = new LinkedHashMap<String, String>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            URL url =  new URL(SERVICE + ontologyName + "/submissions?format=json&apikey=" + KEY);;
+            URL url =  new URL(SERVICE + ontologyName + "/submissions?format=json&apikey=" + apikey);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -58,7 +58,7 @@ public class BioportalOntologyRetriever {
     public InputStream getOntologyBySubmissionId(String ontologyName, String submissionId)  {
 
         try {
-            URL url =  new URL(SERVICE + ontologyName + "/submissions/" + submissionId + "/download?apikey=" + KEY);;
+            URL url =  new URL(SERVICE + ontologyName + "/submissions/" + submissionId + "/download?apikey=" + apikey);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "text/html");
@@ -78,7 +78,7 @@ public class BioportalOntologyRetriever {
 
     public static void main(String[] args) {
 
-        BioportalOntologyRetriever ret = new BioportalOntologyRetriever();
+        BioportalOntologyRetriever ret = new BioportalOntologyRetriever(args[0]);
         Map<String, String> versionInfo = ret.getAllSubmissionId("EFO");
 
         Collection<URI> filter = new HashSet<URI>();
