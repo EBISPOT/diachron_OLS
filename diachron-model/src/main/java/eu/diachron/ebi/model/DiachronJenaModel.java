@@ -32,11 +32,11 @@ public class DiachronJenaModel {
 
     public Model getJenaModelFromDataset() {
 
-        // define object properties
+        // type the properties (only needed to stop them being treated as annotation props in Protege)
 //        model.add(new ResourceImpl(DiachronVocabulary.OBJECT.getURI().toString()), RDF.type, OWL.DatatypeProperty);
 //        model.add(new ResourceImpl(DiachronVocabulary.SUBJECT.getURI().toString()), RDF.type, OWL.ObjectProperty);
-//        model.add(new ResourceImpl(DiachronVocabulary.PROPERTY.getURI().toString()), RDF.type, OWL.ObjectProperty);
-//        model.add(new ResourceImpl(DiachronVocabulary.HASATTRIBUTE.getURI().toString()), RDF.type, OWL.ObjectProperty);
+//        model.add(new ResourceImpl(DiachronVocabulary.PREDICATE.getURI().toString()), RDF.type, OWL.ObjectProperty);
+//        model.add(new ResourceImpl(DiachronVocabulary.HASRECORDATTRIBUTE.getURI().toString()), RDF.type, OWL.ObjectProperty);
 //        model.add(new ResourceImpl(DiachronVocabulary.HASINSTANTIATION.getURI().toString()), RDF.type, OWL.ObjectProperty);
 //        model.add(new ResourceImpl(DiachronVocabulary.HASPART.getURI().toString()), RDF.type, OWL.ObjectProperty);
 //        model.add(new ResourceImpl(DiachronVocabulary.HASRECORD.getURI().toString()), RDF.type, OWL.ObjectProperty);
@@ -86,9 +86,9 @@ public class DiachronJenaModel {
                         RDF.type,
                         new ResourceImpl(DiachronVocabulary.RECORDATTRIBUTE.getURI().toString()));
                 model.add(s5);
-                model.add(s4.getSubject(), new PropertyImpl(DiachronVocabulary.HASATTRIBUTE.getURI().toString()), s5.getSubject());
+                model.add(s4.getSubject(), new PropertyImpl(DiachronVocabulary.HASRECORDATTRIBUTE.getURI().toString()), s5.getSubject());
 
-                model.add(s5.getSubject(), new PropertyImpl(DiachronVocabulary.PROPERTY.getURI().toString()), new ResourceImpl(attribute.getPropertyName().toString()));
+                model.add(s5.getSubject(), new PropertyImpl(DiachronVocabulary.PREDICATE.getURI().toString()), new ResourceImpl(attribute.getPropertyName().toString()));
 
                 if (attribute instanceof ResourceAttribute) {
                     model.add(s5.getSubject(), new PropertyImpl(DiachronVocabulary.OBJECT.getURI().toString()), new ResourceImpl(((ResourceAttribute) attribute).getObject().toString()));

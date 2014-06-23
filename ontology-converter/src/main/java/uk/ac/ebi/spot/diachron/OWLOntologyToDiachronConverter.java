@@ -16,6 +16,8 @@ import java.io.*;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Simon Jupp
@@ -56,7 +58,12 @@ public class OWLOntologyToDiachronConverter {
             }
 
             // create a new diachronic dataset based on this ontology instance
-            this.dataset = new DiachronDataset(ontology.getOntologyID().getOntologyIRI().toURI(), name, version);
+            URI ontologyUri = ontology.getOntologyID().getOntologyIRI().toURI();
+            String ontologyUriAsString = ontologyUri.toString();
+            if (ontologyUriAsString.endsWith("/")) {
+                ontologyUriAsString = ontologyUriAsString.substring(0, ontologyUriAsString.lastIndexOf("/"));
+            }
+            this.dataset = new DiachronDataset(URI.create(ontologyUriAsString), name, version);
 
             RDFGraph graph = visitor.getGraph();
 //            int limit = 10;
@@ -103,21 +110,52 @@ public class OWLOntologyToDiachronConverter {
 
         Collection<URI> filter = new HashSet<URI>();
         filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
+        filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
+        filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
+        filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
 
 
-        OWLOntologyToDiachronConverter converter = null;
-        try {
-            converter = new OWLOntologyToDiachronConverter(new BufferedInputStream(new FileInputStream(new File("/Users/jupp/dev/ontology_dev/efo/svn/ExFactorInOWL/currentrelease/eforelease/efo.owl"))), "efo", "2.44", filter );
-            DiachronJenaModel model = new DiachronJenaModel(converter.getDiachronDataset());
+        File inputFolder  = new File("/Users/jupp/tmp/diachron/ef-last-10-owl");
+
+        String regex = "efo-(\\d\\.\\d+).owl";
+        Pattern pattern = Pattern.compile(regex);
+        for (File file : inputFolder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".owl");
+            }
+        })) {
+
+            String fileName = file.getName();
+            Matcher matcher = pattern.matcher(fileName);
+            if (matcher.find())  {
+
+                String id = matcher.group(1);
+                System.out.println(id);
+
+                OWLOntologyToDiachronConverter converter = null;
+                try {
+                    converter = new OWLOntologyToDiachronConverter(
+                            new BufferedInputStream(
+                                    new FileInputStream(file)),
+                            "efo",
+                            id,
+                            filter );
+                    DiachronJenaModel model = new DiachronJenaModel(converter.getDiachronDataset());
                     try {
-                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-2.44.rdf.xml"), "RDF/XML");
-                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-2.44.rdf.n3"), "N3");
+//                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.xml"), "RDF/XML");
+//                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.ttl"), "TURTLE");
+                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.n3"), "N3");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
+
+
 
 
 

@@ -29,7 +29,7 @@ public enum DiachronVocabulary {
     HASSCHEMASET("hasSchemaSet"),
     HASINSTANTIATION("hasInstantiation"),
     HASRECORDSET("hasRecordSet"),
-    HASATTRIBUTE("hasAttribute"),
+    HASRECORDATTRIBUTE("hasRecordAttribute"),
     HASRECORD("hasRecord"),
     HASPART("hasPart"),
     SUBJECT("subject"),
