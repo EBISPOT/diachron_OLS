@@ -10,12 +10,15 @@ import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.util.InferredEntityAxiomGenerator;
+import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.io.*;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,15 +45,20 @@ public class OWLOntologyToDiachronConverter {
             OWLReasoner owlReasoner = owlReasonerFactory.createReasoner(ontology);
 
             OWLOntology reasonedOntology = owlReasoner.getRootOntology();
+
             FilteredRDFVisitor visitor = new FilteredRDFVisitor(manager, reasonedOntology, true, predicateFilters);
+
+            InferredSubClassAxiomGenerator inferredAxioms = new InferredSubClassAxiomGenerator();
+            Set<OWLSubClassOfAxiom> subClasses = inferredAxioms.createAxioms(manager, owlReasoner);
+
+            for (OWLSubClassOfAxiom subClass : subClasses)
+                visitor.visit(subClass);
+
 
             for (OWLClass entity : reasonedOntology.getClassesInSignature()) {
 
                 for (OWLDeclarationAxiom declarationAxiom: reasonedOntology.getDeclarationAxioms(entity))
                     visitor.visit(declarationAxiom);
-
-                for (OWLSubClassOfAxiom subClasses : reasonedOntology.getSubClassAxiomsForSubClass(entity))
-                    visitor.visit(subClasses);
 
                 for (OWLAnnotationAssertionAxiom annotation : reasonedOntology.getAnnotationAssertionAxioms(entity.getIRI()))
                     visitor.visit(annotation);
@@ -115,13 +123,13 @@ public class OWLOntologyToDiachronConverter {
         filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
 
 
-        File inputFolder  = new File("/Users/jupp/tmp/diachron/ef-last-10-owl");
+        File inputFolder  = new File("/Users/jupp/tmp/diachron/efo-last-15-owl");
 
         String regex = "efo-(\\d\\.\\d+).owl";
         Pattern pattern = Pattern.compile(regex);
         for (File file : inputFolder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.endsWith(".owl");
+                return name.endsWith("37.owl");
             }
         })) {
 
