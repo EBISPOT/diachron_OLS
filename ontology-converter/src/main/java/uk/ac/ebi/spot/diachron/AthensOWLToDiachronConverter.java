@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.diachron;
 import org.apache.commons.cli.*;
 import org.athena.imis.diachron.archive.datamapping.OntologyConverter;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
@@ -16,6 +18,7 @@ import java.util.Map;
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
 public class AthensOWLToDiachronConverter {
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     public AthensOWLToDiachronConverter(String ontologyName, String apikey, int count, File outputDir ) {
 
@@ -33,7 +36,7 @@ public class AthensOWLToDiachronConverter {
 
             final String version = versionInfo.get(id);
 
-            System.out.println("reading " + ontologyName + " " + version);
+            log.info("reading " + ontologyName + " " + version);
 
             InputStream stream  = ret.getOntologyBySubmissionId(ontologyName, id);
 
@@ -49,7 +52,7 @@ public class AthensOWLToDiachronConverter {
                 while ((read = stream.read(bytes)) != -1) {
                     fos.write(bytes, 0, read);
                 }
-                System.out.println("Finished writing " + ontologyName + " " + version);
+               log.info("Finished writing " + ontologyName + " " + version);
 
                 converter.convert(new FileInputStream(original), new FileOutputStream(output), ontologyName,filter );
 

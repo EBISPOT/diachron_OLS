@@ -31,7 +31,7 @@ public class BioportalOntologyRetriever {
         ObjectMapper mapper = new ObjectMapper();
         try {
             URL url =  new URL(SERVICE + ontologyName + "/submissions?format=json&apikey=" + apikey);
-            System.out.println(url.toString());
+            log.info(url.toString());
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
