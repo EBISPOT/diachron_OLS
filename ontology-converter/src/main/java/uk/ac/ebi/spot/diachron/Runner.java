@@ -14,6 +14,7 @@ public class Runner {
 
     private static String name;
     private static String apiKey;
+    private static String host;
     private static int count;
     private static File outputFile;
 
@@ -24,8 +25,13 @@ public class Runner {
 
             if (statusCode == 0) {
 
-                AthensOWLToDiachronConverter converter = new AthensOWLToDiachronConverter(name ,apiKey, count, outputFile);
-
+                AthensOWLToDiachronConverter converter = new AthensOWLToDiachronConverter();
+                if (host != null) {
+                    converter.convertAndArchive(name ,apiKey, count, outputFile, host);
+                }
+                else {
+                    converter.convert(name ,apiKey, count, outputFile);
+                }
 
             }
             else {
@@ -68,6 +74,13 @@ public class Runner {
                     outputFile = new File(".");
                 }
 
+                if (cl.hasOption("h")) {
+                    host = cl.getOptionValue("h");
+                }
+                else {
+                    host = null;
+                }
+
                 count = Integer.parseInt(cl.getOptionValue("c"));
                 name = cl.getOptionValue("n");
                 apiKey = cl.getOptionValue("apiKey");
@@ -100,6 +113,15 @@ public class Runner {
                 "Short name of the ontology e.g. EFO");
         ontologyOption.setRequired(true);
         options.addOption(ontologyOption);
+
+
+        Option hostOption = new Option(
+                "h",
+                "host",
+                true,
+                "If archiving to Diachron provide the diachron host server");
+        hostOption.setRequired(false);
+        options.addOption(hostOption);
 
         Option apiOption = new Option(
                 "k",

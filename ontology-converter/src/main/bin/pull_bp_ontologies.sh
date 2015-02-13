@@ -11,5 +11,5 @@ done
 classpath="$base/config$jars";
 
 
-java -classpath $classpath uk.ac.ebi.spot.diachron.Runner $@ 2>&1;
+/ebi/research/software/Linux_x86_64/opt/java/jdk1.7/bin/java -classpath $classpath uk.ac.ebi.spot.diachron.Runner $@ 2>&1;
 exit $?;

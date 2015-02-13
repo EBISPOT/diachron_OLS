@@ -52,10 +52,10 @@ public class BioportalOntologyRetriever {
                 if (count == -1 || counter < count) {
                     // handle cases where bioportal has multiple version of the same revision
                     if (!submissionIds.containsKey(version.getTextValue())) {
-                        submissionIds.put(String.valueOf(subId.getIntValue()), version.getTextValue());
+                        submissionIds.put(version.getTextValue(), String.valueOf(subId.getIntValue()));
+                        counter++;
                     }
                 }
-                counter++;
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
