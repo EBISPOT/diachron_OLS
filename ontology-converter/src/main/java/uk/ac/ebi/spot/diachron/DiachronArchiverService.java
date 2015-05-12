@@ -17,6 +17,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.PropertyNamingStrategy;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -33,9 +35,10 @@ import java.util.Random;
 public class DiachronArchiverService {
 
     private String serverURL;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
-    private static String baseServerUrl = "http://banana.ebi.ac.uk:55000";
-//    private static String baseServerUrl = "http://localhost:8080";
+//    private static String baseServerUrl = "http://banana.ebi.ac.uk:55000";
+    private static String baseServerUrl = "http://localhost:8080";
     public DiachronArchiverService(String serviceUrl) {
 
         this.serverURL = serviceUrl;
@@ -83,16 +86,21 @@ public class DiachronArchiverService {
 
 
 
-    public String archive (File input, String diachronicDatasetId) throws DiachronException {
+    public String archive (File input, String diachronicDatasetId, String version) throws DiachronException {
 
-        HttpPost httpPost= new HttpPost(baseServerUrl + "/archive-web-services/archive/dataset/version");
+        String archiveUrl = baseServerUrl + "/archive-web-services/archive/dataset/version";
+        HttpPost httpPost= new HttpPost(archiveUrl);
+
+        log.debug("archiving" + diachronicDatasetId + " to " + archiveUrl);
         try {
 
             FileBody uploadFilePart = new FileBody(input);
             StringBody diachronicDatasetIdBody = new StringBody(diachronicDatasetId);
+            StringBody versionBody = new StringBody(version);
 
             MultipartEntity reqEntity = new MultipartEntity();
             reqEntity.addPart("DiachronicDatasetURI", diachronicDatasetIdBody);
+            reqEntity.addPart("versionNumber", versionBody);
             reqEntity.addPart("DataFile", uploadFilePart);
             httpPost.setEntity(reqEntity);
 
@@ -128,7 +136,7 @@ public class DiachronArchiverService {
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 //            ChangeRequest requestBean = new ChangeRequest(oldVersionId, newVersionId, true, new ArrayList<String>());
 
-            String jsonRequestBean = "{\"V1\":\"" + oldVersionId + "\",\"ingest\":true,\"V2\":\"" + newVersionId + "\",\"CCs\":[]}\n";
+            String jsonRequestBean = "{\"Old_Version\":\"" + oldVersionId + "\",\"Ingest\":true,\"New_Version\":\"" + newVersionId + "\",\"Complex_Changes\":[]}\n";
 //            JSONObject jsonRequestBean = new JSONObject(requestBean);
             System.out.println(jsonRequestBean);
 
@@ -432,11 +440,16 @@ public class DiachronArchiverService {
 
     public static class ChangeRequest {
 
-        @JsonProperty("V1")
+        @JsonProperty("Old_Version")
         public String V1;
-        @JsonProperty("V2")
+
+        @JsonProperty("New_Version")
         public String V2;
+
+        @JsonProperty("Ingest")
         public boolean ingest;
+
+        @JsonProperty("Complex_Changes")
         public List<String> CCs;
 
         public ChangeRequest(String oldVersion, String newVersion,  boolean ingest, List<String> complexChanges) {
@@ -447,22 +460,18 @@ public class DiachronArchiverService {
         }
 
 
-        @JsonProperty("V1")
         public String getV1() {
             return V1;
         }
 
-        @JsonProperty("V1")
         public void setV1(String V1) {
             this.V1 = V1;
         }
 
-        @JsonProperty("V2")
         public String getV2() {
             return V2;
         }
 
-        @JsonProperty("V2")
         public void setV2(String V2) {
             this.V2 = V2;
         }

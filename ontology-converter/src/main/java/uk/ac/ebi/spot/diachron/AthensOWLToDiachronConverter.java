@@ -76,7 +76,7 @@ public class AthensOWLToDiachronConverter {
                    try {
                        String datasetId = archiveService.createDiachronicDatasetId(ontologyName, ontologyName, "EMBL-EBI");
                        log.info("Archiving dataset " + ontologyName + " with archive id " + datasetId);
-                       String instanceId = archiveService.archive(output, datasetId);
+                       String instanceId = archiveService.archive(output, datasetId, version);
                        log.info("Archive successful, instance id = " +instanceId);
                        String recordSetId = archiveService.getVersionId(instanceId);
                        log.info("Recordset id for version " + version + " = "  + recordSetId);
