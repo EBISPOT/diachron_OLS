@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-    <context:property-placeholder location="classpath:lode.properties" ignore-unresolvable="true" ignore-resource-not-found="true" />
+    <context:property-placeholder location="classpath:lode.properties,file:/nfs/spot/home/diachron/${tomcat.hostname}/lode.properties" ignore-unresolvable="true" ignore-resource-not-found="true" />
 
     <context:annotation-config/>
 
