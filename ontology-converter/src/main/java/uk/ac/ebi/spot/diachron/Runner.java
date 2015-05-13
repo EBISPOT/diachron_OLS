@@ -15,6 +15,8 @@ public class Runner {
     private static String name;
     private static String apiKey;
     private static String host;
+    private static String versionRegex;
+    private static String archive;
     private static int count;
     private static File outputFile;
 
@@ -26,8 +28,12 @@ public class Runner {
             if (statusCode == 0) {
 
                 AthensOWLToDiachronConverter converter = new AthensOWLToDiachronConverter();
+                if (versionRegex != null) {
+                    converter.setVersionRegexFilter(versionRegex);
+                }
+
                 if (host != null) {
-                    converter.convertAndArchive(name ,apiKey, count, outputFile, host);
+                    converter.convertAndArchive(name ,apiKey, count, outputFile, host, archive);
                 }
                 else {
                     converter.convert(name ,apiKey, count, outputFile);
@@ -81,7 +87,26 @@ public class Runner {
                     host = null;
                 }
 
-                count = Integer.parseInt(cl.getOptionValue("c"));
+                if (cl.hasOption("r")) {
+                    versionRegex = cl.getOptionValue("r");
+                }
+                else {
+                    versionRegex = null;
+                }
+
+                if (cl.hasOption("a")) {
+                    archive = cl.getOptionValue("a");
+                }
+                else {
+                    archive = null;
+                }
+
+                if (cl.getOptionValue("c") != null) {
+                    count = Integer.parseInt(cl.getOptionValue("c"));
+                }
+                else {
+                    count = -1;
+                }
                 name = cl.getOptionValue("n");
                 apiKey = cl.getOptionValue("apiKey");
 
@@ -119,9 +144,25 @@ public class Runner {
                 "h",
                 "host",
                 true,
-                "If archiving to Diachron provide the diachron host server");
+                "If archiving to Diachron provide the diachron integration server");
         hostOption.setRequired(false);
         options.addOption(hostOption);
+
+        Option archiveOption = new Option(
+                "a",
+                "archive",
+                true,
+                "If archiving to Diachron provide the diachron archive server");
+        archiveOption.setRequired(false);
+        options.addOption(archiveOption);
+
+        Option versionOption = new Option(
+                "r",
+                "versionRegex",
+                true,
+                "Regular expression to filter out versions you want to archive");
+        versionOption.setRequired(false);
+        options.addOption(versionOption);
 
         Option apiOption = new Option(
                 "k",
