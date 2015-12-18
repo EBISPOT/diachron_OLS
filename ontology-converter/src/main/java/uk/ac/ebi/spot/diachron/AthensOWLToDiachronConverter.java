@@ -35,32 +35,42 @@ public class AthensOWLToDiachronConverter {
         this.versionRegexFilter = versionRegexFilter;
     }
 
-    public void convert(String ontologyName, String apikey, int count, File outputDir) {
+ /*   public void convert(String ontologyName, String apikey, int count, File outputDir) {
         convertAndArchive(ontologyName, apikey, count, outputDir, null, null);
-    }
+    }*/
 
-    public void convertAndArchive (String ontologyName, String apikey, int count, File outputDir, String integrationUrl, String archiveUrls) {
+    public void convertAndArchive (String ontologyName, String apikey, int count, File outputDir, String integrationUrl, String archiveUrls, Collection<URI> filter) {
         final BioportalOntologyRetriever ret = new BioportalOntologyRetriever(apikey);
         Map<String, String> versionInfo = ret.getAllSubmissionId(ontologyName, count);
-        Collection<URI> filter = new HashSet<URI>();
-        filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
+       // Collection<URI> filter = new HashSet<URI>();
+     //   filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
+       // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#prefLabel"));
+       // filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
+       // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#definition"));
+       // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#altLabel"));
+   //     filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
+   //     filter.add(URI.create("http://purl.obolibrary.org/obo/IAO_0000115"));
+   //     filter.add(URI.create("http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"));
+     //   filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
+     //   filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
+     //   filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
 
-        Pattern p = Pattern.compile(getVersionRegexFilter());
+      //  Pattern p = Pattern.compile(getVersionRegexFilter());
 
         DiachronArchiverService archiveService = null;
         if (integrationUrl != null) {
-            archiveService = new DiachronArchiverService(integrationUrl, archiveUrls);
+            archiveService = new DiachronArchiverService(integrationUrl, archiveUrls, "http://localhost:8080/ForthMaven");
         }
 
         OntologyConverter converter = new OntologyConverter();
         String newerVersion = null;
         for (final String version :versionInfo.keySet()) {
 
-            Matcher m = p.matcher(version);
-            if (m.matches()) {
+        //    Matcher m = p.matcher(version);
+          //  if (m.matches()) {
+
+                String versionTest = version.replace("releases/","");
+                versionTest = versionTest.replace("-",".");
 
                 final String id = versionInfo.get(version);
 
@@ -70,20 +80,34 @@ public class AthensOWLToDiachronConverter {
 
                 try {
 
-                    File original = new File(outputDir, ontologyName + "-" + version + ".owl");
-                    File output = new File(outputDir, ontologyName + "-diachronic-" + version + ".owl");
-                    FileOutputStream fos = new FileOutputStream(original);
+                    File original = new File(outputDir, ontologyName + "-" + versionTest + ".owl");
+                    File output = new File(outputDir, ontologyName + "-diachronic-" + versionTest + ".owl");
+                    if(!original.exists()) {
+                        FileOutputStream fos = new FileOutputStream(original);
 
-                    int read = 0;
-                    byte[] bytes = new byte[1024];
+                        int read = 0;
+                        byte[] bytes = new byte[1024];
 
-                    while ((read = stream.read(bytes)) != -1) {
-                        fos.write(bytes, 0, read);
+                        while ((read = stream.read(bytes)) != -1) {
+                            fos.write(bytes, 0, read);
+                        }
                     }
                     log.info("Finished writing " + ontologyName + " " + version);
                     log.info("Starting to convert to diachron: " + ontologyName + " " + version);
 
-                    converter.convert(new FileInputStream(original), new FileOutputStream(output), ontologyName, filter);
+                    if(!output.exists()) {
+                        String reasoner;
+                        if (!output.exists()) {
+
+                            if (ontologyName.contains("EFO")) {
+                                reasoner = "hermit";
+                            } else {
+                                reasoner = "elk";
+                            }
+                            converter.convert(new FileInputStream(original), new FileOutputStream(output), ontologyName, filter, reasoner);
+                        }
+                    }
+
                     log.info("Finished converting to diachron:  " + ontologyName + " " + version);
 
                     if (archiveService != null) {
@@ -92,13 +116,16 @@ public class AthensOWLToDiachronConverter {
                             String datasetId = archiveService.createDiachronicDatasetId(ontologyName, ontologyName, "EMBL-EBI");
                             log.info("Archiving dataset " + ontologyName + " with archive id " + datasetId);
                             String instanceId = archiveService.archive(output, datasetId, version);
+
                             log.info("Archive successful, instance id = " + instanceId);
-                            String recordSetId = archiveService.getVersionId(instanceId);
+                            Utils utils = new Utils();
+                            String recordSetId =  utils.getLatestDatasetsInfo("http://localhost:8080/archive-web-services", datasetId,"recordSet", instanceId); //archiveService.getVersionId(instanceId);
+                            // String recordSetId = archiveService.getVersionId(instanceId);
                             log.info("Recordset id for version " + version + " = " + recordSetId);
 
                             if (newerVersion != null) {
                                 log.info("Running change detection between " + recordSetId + " and " + newerVersion);
-                                archiveService.runChangeDetection(newerVersion, recordSetId);
+                                archiveService.runChangeDetection(newerVersion, recordSetId, "http://www.diachron-fp7.eu/" + ontologyName.toLowerCase());
                             }
 
                             newerVersion = recordSetId;
@@ -117,7 +144,7 @@ public class AthensOWLToDiachronConverter {
                     e.printStackTrace();
                 }
 
-            }
+          //  }
         }
 
     }

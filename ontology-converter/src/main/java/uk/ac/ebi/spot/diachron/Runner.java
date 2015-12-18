@@ -33,10 +33,10 @@ public class Runner {
                 }
 
                 if (host != null) {
-                    converter.convertAndArchive(name ,apiKey, count, outputFile, host, archive);
+                   // converter.convertAndArchive(name ,apiKey, count, outputFile, host, archive);
                 }
                 else {
-                    converter.convert(name ,apiKey, count, outputFile);
+                 //   converter.convert(name ,apiKey, count, outputFile);
                 }
 
             }
