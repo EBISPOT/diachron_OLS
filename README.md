@@ -54,16 +54,19 @@ The fields that weren't mentioned in the config.properties folder are described 
 
 ### Other DIACHRON uses from this repository
 
-By running the Runner.java class, you can run change detection between specific ontologies and define the versions you want to be archived. The ontologies in this case will be downloaded from Bioportal versus being downloaded from OLS as is done in the OLS crawler. 
-The arguments that need to be defined in order for the Runner to run are:
+By running the Runner.java class, you can run change detection between specific ontologies and define the versions you want to be archived. The ontologies in this case will be downloaded from Bioportal versus being downloaded from OLS as is done in the OLS crawler. If you choose to run this you will need to get a bit more technical and do some java editing.
+
+You need to configure the config.properties file as mentioned above, and the arguments that need to be defined in order for the Runner to run are:
 
 * -n \<OntologyName\> //e.g. EFO
-* -h "http://\<yourApacheHost\>:\<yourHostPort\>/DIACHRONIntegrationLayer" //you need to build the Integration Layer in order for this to run
-* -a "http://\<yourApacheHost\>:\<yourHostPort\>/\<ArchiveService\>" //the archive service
 * -c 2  // the number of versions to be archived
-* -r "2.37|2.38" //the versions wanted seperated with a pipe "|" 
-* -o "\<folder path\>" //path to a folder where the ontologies and the diachronized formats will be stored 
+* -r "2.37|2.36" //the versions wanted seperated with a pipe "|" 
 * -k "BioportalKey" // your Bioportal key
+
+In order for the change detection to work with the Runner, two things are needed:
+
+1. the change scheme for the ontology needs to have been created. This can be done by manualy uploading the change scheme to the virtuoso server named (e.g. for efo): "Dataset_URI/efo/changes/schema" or by having it created by running the "OntologyDiachronizer.java" class with the ontology name as an argument (e.g.: -n efo).
+2. the "AthensOWLToDiachronConverter.java" needs to be edited in order for the correct predicate filters to be added according to the ontology that will be archived.
 
 ### Troubleshooting
 
