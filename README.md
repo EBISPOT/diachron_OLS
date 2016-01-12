@@ -29,10 +29,10 @@ In order to get DIACHRON running for OLS you need an [Apache Tomcat](http://tomc
 To get DIACHRON up and running you need to deploy the [Archive Service](https://github.com/diachron/archive) and the [Change Detection service](https://github.com/diachron/detection_repair_maven). Integration Layer is not being used at the time. Get these running on Apache Tomcat. You should be able to see the Archiver's web interface, and get a "Hello World!" from the Change Detection.
 
 ##### Archive service
-When building the Archive service, you will need to edit the file: archive/diachron-archive/archive-web-services/src/main/resources/virt-connection.properties with your Virtuoso server properties. The "virtuoso-bulk-load-path" is the where the archiver will store the ontology versions. Make sure it is added at "DirsAllowed" field on the virtuoso.ini file.
+When building the Archive service, you will need to edit the file: archive/diachron-archive/archive-web-services/src/main/resources/virt-connection.properties with your Virtuoso server properties. The "virtuoso-bulk-load-path" is the where the archiver will store the ontology versions. Make sure it is added at the "DirsAllowed" field on the virtuoso.ini file.
 
 ##### Change Detection service
-When building the Change Detection service, you will need to edit the file: detection_repair_maven/src/main/resources/config.properties. You need to replace the Repository properties to your Virtuoso server properties. You also need to edit the **Simple_Changes_Folder** field to point the folder where you have placed the files found here: detection_repair_maven/sparql/ontological/simple_changes/with_assoc/ 
+When building the Change Detection service, you will need to edit the file: detection_repair_maven/src/main/resources/config.properties. You need to replace the Repository properties to your Virtuoso server properties. You also need to edit the **Simple_Changes_Folder** field to point to the folder where you have placed the files found here: detection_repair_maven/sparql/ontological/simple_changes/with_assoc/ 
 
 ### Running the OLS crawler
 
