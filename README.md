@@ -18,9 +18,8 @@ The [Ontology Lookup Service](http://www.ebi.ac.uk/ols/beta/) is an ontology bro
 
 ### DIACHRON in OLS
 
-DIACHRON functionality is being added in OLS in order to provide a tool for easy visualization and tracking of ontolgy evolution. Every new version that is stored in OLS is archived, and change detection runs between the old and new version of each ontology. The results can be used to visualize the alterations and make the users of these ontologies aware of the changes.
+DIACHRON functionality is being added in OLS in order to provide a tool for easy visualization and tracking of ontolgy evolution. An OLS Crawler has been developed. Every new version that is stored in OLS is archived, and change detection runs between the old and new version of each ontology. The results can be used to visualize the alterations and make the users of these ontologies aware of the changes.
 
-========================
 ### System Requirements
 
 In order to get DIACHRON running for OLS you need an [Apache Tomcat](http://tomcat.apache.org) server and a [Virtuoso Universal](https://github.com/openlink/virtuoso-opensource) server running.
@@ -29,5 +28,13 @@ In order to get DIACHRON running for OLS you need an [Apache Tomcat](http://tomc
 
 To get DIACHRON up and running you need to deploy the [Archive Service](https://github.com/diachron/archive) and the [Change Detection service](https://github.com/diachron/detection_repair_maven). Integration Layer is not being used at the time. Get these running on Apache Tomcat. You should be able to see the Archiver's web interface, and get a "Hello World!" from the Change Detection.  
 
-### Configure 
+### Running the OLS crawler
+
+In order to use the OLS crawler you need to
+1. checkout the code in this repository
+2. configure the [config.properties](https://github.com/olgavrou/diachron-test/blob/master/ontology-converter/src/main/resources/config.properties) under /ontology-converter/src/main/resources as so:
+  *'Archiver' should point to the Archiver service that you have configured in your Apache Tomcat server
+  *'ChangeDetector' should point to the Change Detection service that you have configured in your Apache Tomcat server
+  *'OutputFolder' should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
+  
 
