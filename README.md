@@ -6,7 +6,7 @@
 The [DIACHRON](http://www.diachron-fp7.eu) project has been developing technology for monitoring the evolution of data on the Web. Dataset versions can be archived in the DIACHRON system and there are components for detecting and reporting on changes in the data. The DIACHRON platform is able to archive and monitor changes in data expressed in the W3C Resource Description Framework (RDF), thus making it suitable for archiving ontologies expressed in the W3C Web Ontology Language (OWL) that can be serialised in RDF. The end product of running diachron on two versions of an ontology is the **ontology of changes** which holds the differences between the versions of that ontology. We can then use the ontology of changes to see the evolution of an ontology through time.
 At EMBL-EBI we are interested in the use of DIACHRON to track changes in ontologies.
 
-The DIACHRON paltform is comprised from several comonents. We are interested in the three mentioned below:
+The DIACHRON platform is comprised from several components. We are interested in the three mentioned below:
 
 1. The [Archive service](https://github.com/diachron/archive) is responsible for converting ontology versions represented in OWL or OBO format, to the DIACHRON RDF model. They can then be uploaded into the Archive, thus being archived.
 2. The [Change Detection service](https://github.com/diachron/detection_repair_maven) is responsible for the calculation of changes between two ontology versions.
