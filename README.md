@@ -46,7 +46,9 @@ If all goes well you should be able to see the archived versions of the ontologi
 ### Useful info
 
 It should be mentioned that for each ontology there is a change scheme that is created, where the complex changes are defined for that ontology. Each ontology gets one, as different ontologies use different properties to define terms.
+
 ==================================
+
 The fields that weren't mentioned in the config.properties folder are described here, and the cases when they should be edited:
 
 1. **Dataset_URI** is a uri prefix from which the uri's of the archives of each ontology and there change detection schemes will be created. For example, for the EFO ontology with the given Dataset_URI, it's change detection scheme can be found under the "http://www.diachron-fp7.eu/efo/changes/schema" uri in the Virtuoso server, and an archived version can be found under the "http://www.diachron-fp7.eu/resource/recordset/EFO/timestamp" uri in the Virtuoso server. You can view the residing data through the SPARQL endpoint provided by the Virtuoso server. The Dataset_URI can be changed to anything desired.
