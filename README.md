@@ -62,8 +62,8 @@ The arguments that need to be defined in order for the Runner to run are:
 * -a "http://\<yourApacheHost\>:\<yourHostPort\>/\<ArchiveService\>" //the archive service
 * -c 2  // the number of versions to be archived
 * -r "2.37|2.38" //the versions wanted seperated with a pipe "|" 
-* -o "<folder path>" //path to a folder where the ontologies and the diachronized formats will be stored 
-* -k "870f31f0-237d-42ed-bf72-6f3b53ceec54" // your Bioportal key
+* -o "\<folder path\>" //path to a folder where the ontologies and the diachronized formats will be stored 
+* -k "BioportalKey" // your Bioportal key
 
 ### Troubleshooting
 
