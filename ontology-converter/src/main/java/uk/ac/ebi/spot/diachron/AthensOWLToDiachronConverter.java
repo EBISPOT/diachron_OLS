@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +20,24 @@ public class AthensOWLToDiachronConverter {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public String versionRegexFilter = "*";
+    private String integrationLayer;
+    private String archiver;
+    private String changeDetector;
+    private String output;
+    private String datasetUri;
+    private PropertiesManager propertiesManager;
+    private Properties properties;
 
     public AthensOWLToDiachronConverter() {
+        this.propertiesManager = PropertiesManager.getPropertiesManager();
+        this.properties = propertiesManager.getProperties();
+
+        this.integrationLayer = properties.getProperty("IntegrationLayer");
+        this.archiver = properties.getProperty("Archiver");
+        this.changeDetector = properties.getProperty("ChangeDetector");
+
+        this.output = properties.getProperty("OutputFolder");
+        this.datasetUri = properties.getProperty("Dataset_URI");
 
     }
 
@@ -35,15 +49,15 @@ public class AthensOWLToDiachronConverter {
         this.versionRegexFilter = versionRegexFilter;
     }
 
- /*   public void convert(String ontologyName, String apikey, int count, File outputDir) {
-        convertAndArchive(ontologyName, apikey, count, outputDir, null, null);
-    }*/
+    public void convert(String ontologyName, String apikey, int count, File outputDir) {
+       // convertAndArchive(ontologyName, apikey, count, outputDir, null, null);
+    }
 
-    public void convertAndArchive (String ontologyName, String apikey, int count, File outputDir, String integrationUrl, String archiveUrls, Collection<URI> filter) {
+    public void convertAndArchive (String ontologyName, String apikey, int count) {
         final BioportalOntologyRetriever ret = new BioportalOntologyRetriever(apikey);
         Map<String, String> versionInfo = ret.getAllSubmissionId(ontologyName, count);
-       // Collection<URI> filter = new HashSet<URI>();
-     //   filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
+        Collection<URI> filter = new HashSet<URI>();
+        filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
        // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#prefLabel"));
        // filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
        // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#definition"));
@@ -51,23 +65,23 @@ public class AthensOWLToDiachronConverter {
    //     filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
    //     filter.add(URI.create("http://purl.obolibrary.org/obo/IAO_0000115"));
    //     filter.add(URI.create("http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"));
-     //   filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
-     //   filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
-     //   filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
+        filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
+        filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
+        filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
 
-      //  Pattern p = Pattern.compile(getVersionRegexFilter());
+        Pattern p = Pattern.compile(getVersionRegexFilter());
 
         DiachronArchiverService archiveService = null;
-        if (integrationUrl != null) {
-            archiveService = new DiachronArchiverService(integrationUrl, archiveUrls, "http://localhost:8080/ForthMaven");
+        if (this.integrationLayer != null) {
+            archiveService = new DiachronArchiverService(this.integrationLayer, this.archiver, this.changeDetector);
         }
 
         OntologyConverter converter = new OntologyConverter();
         String newerVersion = null;
         for (final String version :versionInfo.keySet()) {
 
-        //    Matcher m = p.matcher(version);
-          //  if (m.matches()) {
+            Matcher m = p.matcher(version);
+            if (m.matches()) {
 
                 String versionTest = version.replace("releases/","");
                 versionTest = versionTest.replace("-",".");
@@ -80,8 +94,8 @@ public class AthensOWLToDiachronConverter {
 
                 try {
 
-                    File original = new File(outputDir, ontologyName + "-" + versionTest + ".owl");
-                    File output = new File(outputDir, ontologyName + "-diachronic-" + versionTest + ".owl");
+                    File original = new File(this.output, ontologyName + "-" + versionTest + ".owl");
+                    File output = new File(this.output, ontologyName + "-diachronic-" + versionTest + ".owl");
                     if(!original.exists()) {
                         FileOutputStream fos = new FileOutputStream(original);
 
@@ -119,13 +133,13 @@ public class AthensOWLToDiachronConverter {
 
                             log.info("Archive successful, instance id = " + instanceId);
                             Utils utils = new Utils();
-                            String recordSetId =  utils.getLatestDatasetsInfo("http://localhost:8080/archive-web-services", datasetId,"recordSet", instanceId); //archiveService.getVersionId(instanceId);
+                            String recordSetId =  utils.getLatestDatasetsInfo(this.archiver, datasetId,"recordSet", instanceId); //archiveService.getVersionId(instanceId);
                             // String recordSetId = archiveService.getVersionId(instanceId);
                             log.info("Recordset id for version " + version + " = " + recordSetId);
 
                             if (newerVersion != null) {
                                 log.info("Running change detection between " + recordSetId + " and " + newerVersion);
-                                archiveService.runChangeDetection(newerVersion, recordSetId, "http://www.diachron-fp7.eu/" + ontologyName.toLowerCase());
+                                archiveService.runChangeDetection(newerVersion, recordSetId, this.datasetUri + ontologyName.toLowerCase());
                             }
 
                             newerVersion = recordSetId;
@@ -144,7 +158,7 @@ public class AthensOWLToDiachronConverter {
                     e.printStackTrace();
                 }
 
-          //  }
+            }
         }
 
     }

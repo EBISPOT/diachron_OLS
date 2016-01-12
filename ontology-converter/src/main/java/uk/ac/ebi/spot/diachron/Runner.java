@@ -32,11 +32,11 @@ public class Runner {
                     converter.setVersionRegexFilter(versionRegex);
                 }
 
-                if (host != null) {
-                   // converter.convertAndArchive(name ,apiKey, count, outputFile, host, archive);
+                if (name != null) {
+                    converter.convertAndArchive(name ,apiKey, count);
                 }
                 else {
-                 //   converter.convert(name ,apiKey, count, outputFile);
+                    //converter.convert(name ,apiKey, count, outputFile);
                 }
 
             }

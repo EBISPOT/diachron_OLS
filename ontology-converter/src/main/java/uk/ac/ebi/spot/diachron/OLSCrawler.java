@@ -35,7 +35,7 @@ public class OLSCrawler {
             //JsonNode ontology = mapper.readTree(jsonResponse);
 
             //ONTOLOGY CRAWLER
-            ArrayList<Iterator> ontologies = new ArrayList<>();
+            ArrayList<JsonNode> ontologies = new ArrayList<>();
            // ontologies.add(rootNode.get("_embedded").get("ontologies").getElements());
             JsonNode next = rootNode.get("_links").get("first");
             while (next != null) {
@@ -43,7 +43,10 @@ public class OLSCrawler {
                 try {
                     jsonResponse = httpRequest.executeHttpGet(nextPage, null);
                     rootNode = mapper.readTree(jsonResponse);
-                    ontologies.add(rootNode.get("_embedded").get("ontologies").getElements());
+                    Iterator iter = rootNode.get("_embedded").get("ontologies").getElements();
+                    while (iter.hasNext()){
+                        ontologies.add((JsonNode) iter.next());
+                    }
                     next = rootNode.get("_links").get("next");
                     System.out.println("Page: " + nextPage);
                 } catch (IOException | URISyntaxException | NullPointerException e) {
@@ -54,9 +57,7 @@ public class OLSCrawler {
 
             FileOutputStream outputStream = new FileOutputStream(new File("OntologyList.txt"));
 
-                for (Iterator iter : ontologies) {
-                    while (iter.hasNext()) {
-                        JsonNode ontology = (JsonNode) iter.next();
+                    for (JsonNode ontology : ontologies)  {
                         if (ontology.get("status").getTextValue().equals("LOADED")) {
                             JsonNode config = ontology.get("config");
 
@@ -67,7 +68,6 @@ public class OLSCrawler {
 
                         }
                     }
-                }
             return true;
         } catch (IOException e) {
             e.printStackTrace();

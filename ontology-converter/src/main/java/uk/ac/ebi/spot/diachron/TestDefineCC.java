@@ -57,7 +57,7 @@ public class TestDefineCC {
 //        System.out.println(response.getEntity(String.class));
 //        System.out.println(response.getStatus());
 //        System.out.println("-----\n");
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 1000; i++) {
             datasetUri = "http://test/" + i;
             JSONObject input = new JSONObject();
             input.put("Dataset_URI", datasetUri);
