@@ -22,7 +22,7 @@ DIACHRON functionality is being added in OLS in order to provide a tool for easy
 
 ### System Requirements
 
-In order to get DIACHRON running for OLS you need an [Apache Tomcat](http://tomcat.apache.org) server and a [Virtuoso Universal](https://github.com/openlink/virtuoso-opensource) server running.
+In order to get DIACHRON running for OLS you need an [Apache Tomcat](http://tomcat.apache.org) server and a [Virtuoso Universal](https://github.com/openlink/virtuoso-opensource) server running. Installing [Apache Maven](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) can make the project building easier.
 
 ### Build DIACHRON
 
@@ -32,11 +32,23 @@ To get DIACHRON up and running you need to deploy the [Archive Service](https://
 
 In order to use the OLS crawler you need to:
 
-1. checkout the code in this repository
-2. configure the [config.properties](https://github.com/olgavrou/diachron-test/blob/master/ontology-converter/src/main/resources/config.properties) under /ontology-converter/src/main/resources as so:
+1. checkout the code from this repository
+2. configure the [config.properties](https://github.com/olgavrou/diachron-test/blob/master/ontology-converter/src/main/resources/config.properties) under /ontology-converter/src/main/resources/ as so:
   * "Archiver" should point to the Archiver service that you have configured in your Apache Tomcat server
   * "ChangeDetector" should point to the Change Detection service that you have configured in your Apache Tomcat server
   * "OutputFolder" should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
-3. Item 3
+3. edit the "diachron_ontologies.sh" and "diachron_ontology.sh" scripts under /ontology-converter/src/main/bin/ [here](https://github.com/olgavrou/diachron-test/tree/master/ontology-converter/src/main/bin) so that the $JAVA_HOME path points to your java home directory
+4. build the application using "mvn clean package"
+5. in the target folder you should see the diachron.zip and a diachron.tar.gz files. Decompress the one you want. In the bin file that appears after the decompression you just need to run the Runner.sh script for the OLS crawler to run. 
+
+If all goes well you should be able to see the archived versions of the ontologies in your Virtuoso Universal server, and if run more than once with updated ontologies in OLS, you should be able to see the changes between ontology versions.
+
+### Useful info
+
+The fields that weren't mentioned in the config.properties folder are described here, and when they should be edited:
+1. "Dataset_URI" is a uri prefix from which the uri's of the archives of each ontology and there change detection schemes will be created. For example, for the EFO ontology with the given Dataset_URI, it's change detection scheme can be found under the "http://www.diachron-fp7.eu/efo/changes/schema" uri in the Virtuoso server, and an archived version can be found under the "http://www.diachron-fp7.eu/resource/recordset/EFO/<uniqueID>/<uniqueID>" uri in the Virtuoso server. You can view their residing data through the SPARQL endpoint provided be the Virtuoso server. The Dataset_URI can be changed to anything desired.
+2. "OLS_API" is the api enpoint of the OLS ontologies. This should be changed if the OLS API url changes.
+3. "Simple_Changes" are a set of changes that are predifined from the change detector. They should not be changed.
+4. "Complex_Changes" are a set of changes that are defined from the user. If a new complex change needs to be added, the equivalent code for its definition should be added in the "ComplexChangesManager.java" class.
  
 
