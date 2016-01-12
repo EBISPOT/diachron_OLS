@@ -51,5 +51,22 @@ The fields that weren't mentioned in the config.properties folder are described 
 2. "OLS_API" is the api enpoint of the OLS ontologies. This should be changed if the OLS API url changes.
 3. "Simple_Changes" are a set of changes that are predifined from the change detector. They should not be changed.
 4. "Complex_Changes" are a set of changes that are defined from the user. If a new complex change needs to be added, the equivalent code for its definition should be added in the "ComplexChangesManager.java" class.
+
+### Other DIACHRON uses from this repository
+
+By running the Runner.java class, you can run change detection between specific ontologies and define the versions you want to be archived. The ontologies in this case will be downloaded from Bioportal versus being downloaded from OLS as is done in the OLS crawler. 
+The arguments that need to be defined in order for the Runner to run are:
+-n <OntologyName> //e.g. EFO
+-h "http://<yourApacheHost>:<yourHostPort>/DIACHRONIntegrationLayer" //you need to build the Integration Layer in order for this to run
+-a "http://<yourApacheHost>:<yourHostPort>/<ArchiveService>" //the archive service
+-c 2  // the number of versions to be archived
+-r "2.37|2.38" //the versions wanted seperated with a pipe "|" 
+-o "<folder path>" //path to a folder where the ontologies and the diachronized formats will be stored 
+-k "870f31f0-237d-42ed-bf72-6f3b53ceec54" // your Bioportal key
+
+### Troubleshooting
+
+After running the OLS crawler the servers (tomcat and virtuoso) might hang and need to be restarted. 
+
  
 
