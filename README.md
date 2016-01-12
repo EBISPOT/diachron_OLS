@@ -3,7 +3,7 @@
 
 ### What is DIACHRON
 
-The [DIACHRON](http://www.diachron-fp7.eu) project has been developing technology for monitoring the evolution of data on the Web. Dataset versions can be archived in the DIACHRON system and there are components for detecting and reporting on changes in the data. The DIACHRON platform is able to archive and monitor changes in data expressed in the W3C Resource Description Framework (RDF), thus making it suitable for archiving ontologies expressed in the W3C Web Ontology Language (OWL) that can be serialised in RDF. The end product of running diachron on two versions of an ontology is the *ontology of changes* which holds the differences between the versions of that ontology. We can then use the ontology of changes to see the evolution of an ontology through time.
+The [DIACHRON](http://www.diachron-fp7.eu) project has been developing technology for monitoring the evolution of data on the Web. Dataset versions can be archived in the DIACHRON system and there are components for detecting and reporting on changes in the data. The DIACHRON platform is able to archive and monitor changes in data expressed in the W3C Resource Description Framework (RDF), thus making it suitable for archiving ontologies expressed in the W3C Web Ontology Language (OWL) that can be serialised in RDF. The end product of running diachron on two versions of an ontology is the **ontology of changes** which holds the differences between the versions of that ontology. We can then use the ontology of changes to see the evolution of an ontology through time.
 At EMBL-EBI we are interested in the use of DIACHRON to track changes in ontologies.
 
 The DIACHRON paltform is comprised from several comonents. We are interested in the three mentioned below:
@@ -33,10 +33,10 @@ To get DIACHRON up and running you need to deploy the [Archive Service](https://
 In order to use the OLS crawler you need to:
 
 1. checkout the code from this repository
-2. configure the *config.properties* under /ontology-converter/src/main/resources/ as so:
-  * *Archiver* should point to the Archiver service that you have configured in your Apache Tomcat server
-  * *ChangeDetector* should point to the Change Detection service that you have configured in your Apache Tomcat server
-  * *OutputFolder* should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
+2. configure the **config.properties** under /ontology-converter/src/main/resources/ as so:
+  * **Archiver** should point to the Archiver service that you have configured in your Apache Tomcat server
+  * **ChangeDetector** should point to the Change Detection service that you have configured in your Apache Tomcat server
+  * **OutputFolder** should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
 3. edit the "diachron_ontologies.sh" and "diachron_ontology.sh" scripts under /ontology-converter/src/main/bin/ so that the $JAVA_HOME path points to your java home directory
 4. build the application using "mvn clean package"
 5. in the target folder you should see the diachron.zip and a diachron.tar.gz files. Decompress the one you want. In the bin file that appears after the decompression you just need to run the Runner.sh script for the OLS crawler to run. 
@@ -45,12 +45,14 @@ If all goes well you should be able to see the archived versions of the ontologi
 
 ### Useful info
 
-The fields that weren't mentioned in the config.properties folder are described here, and when they should be edited:
+It should be mentioned that for each ontology there is a change scheme that is created, where the complex changes are defined for that ontology. Each ontology gets one, as different ontologies use different properties to define terms.
+==================================
+The fields that weren't mentioned in the config.properties folder are described here, and the cases when they should be edited:
 
-1. *Dataset_URI* is a uri prefix from which the uri's of the archives of each ontology and there change detection schemes will be created. For example, for the EFO ontology with the given Dataset_URI, it's change detection scheme can be found under the "http://www.diachron-fp7.eu/efo/changes/schema" uri in the Virtuoso server, and an archived version can be found under the "http://www.diachron-fp7.eu/resource/recordset/EFO/timestamp" uri in the Virtuoso server. You can view the residing data through the SPARQL endpoint provided by the Virtuoso server. The Dataset_URI can be changed to anything desired.
-2. *OLS_API* is the api endpoint of the OLS ontologies. This should be changed if the OLS API url changes.
-3. *Simple_Changes* are a set of changes that are predifined from the change detector. They should not be changed.
-4. *Complex_Change* are a set of changes that are defined from the user. If a new complex change needs to be added, the equivalent code for its definition should be added in the "ComplexChangesManager.java" class and in the runChangeDetection method of "DiachronArchiverService.java" class.
+1. **Dataset_URI** is a uri prefix from which the uri's of the archives of each ontology and there change detection schemes will be created. For example, for the EFO ontology with the given Dataset_URI, it's change detection scheme can be found under the "http://www.diachron-fp7.eu/efo/changes/schema" uri in the Virtuoso server, and an archived version can be found under the "http://www.diachron-fp7.eu/resource/recordset/EFO/timestamp" uri in the Virtuoso server. You can view the residing data through the SPARQL endpoint provided by the Virtuoso server. The Dataset_URI can be changed to anything desired.
+2. **OLS_API** is the api endpoint of the OLS ontologies. This should be changed if the OLS API url changes.
+3. **Simple_Changes** are a set of changes that are predifined from the change detector. They should not be changed.
+4. **Complex_Change** are a set of changes that are defined from the user. If a new complex change needs to be added, the equivalent code for its definition should be added in the "ComplexChangesManager.java" class and in the runChangeDetection method of "DiachronArchiverService.java" class.
 
 ### Other DIACHRON uses from this repository
 
