@@ -20,8 +20,14 @@ The [Ontology Lookup Service](http://www.ebi.ac.uk/ols/beta/) is an ontology bro
 
 DIACHRON functionality is being added in OLS in order to provide a tool for easy visualization and tracking of ontolgy evolution. Every new version that is stored in OLS is archived, and change detection runs between the old and new version of each ontology. The results can be used to visualize the alterations and make the users of these ontologies aware of the changes.
 
+========================
+### System Requirements
 
+In order to get DIACHRON running for OLS you need an [Apache Tomcat](http://tomcat.apache.org) server and a [Virtuoso Universal](https://github.com/openlink/virtuoso-opensource) server running.
 
+### Build DIACHRON
 
+To get DIACHRON up and running you need to deploy the [Archive Service](https://github.com/diachron/archive) and the [Change Detection service](https://github.com/diachron/detection_repair_maven). Integration Layer is not being used at the time. Get these running on Apache Tomcat. You should be able to see the Archiver's web interface, and get a "Hello World!" from the Change Detection.  
 
+### Configure 
 
