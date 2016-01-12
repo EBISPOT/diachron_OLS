@@ -30,11 +30,13 @@ To get DIACHRON up and running you need to deploy the [Archive Service](https://
 
 ### Running the OLS crawler
 
-In order to use the OLS crawler you need to
+In order to use the OLS crawler you need to:
+
 1. checkout the code in this repository
 2. configure the [config.properties](https://github.com/olgavrou/diachron-test/blob/master/ontology-converter/src/main/resources/config.properties) under /ontology-converter/src/main/resources as so:
-  * 'Archiver' should point to the Archiver service that you have configured in your Apache Tomcat server
-  * 'ChangeDetector' should point to the Change Detection service that you have configured in your Apache Tomcat server
-  * 'OutputFolder' should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
-3. 
+  * "Archiver" should point to the Archiver service that you have configured in your Apache Tomcat server
+    * "ChangeDetector" should point to the Change Detection service that you have configured in your Apache Tomcat server
+    * "OutputFolder" should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
+3. Item 3
+ 
 
