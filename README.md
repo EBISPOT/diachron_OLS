@@ -45,13 +45,13 @@ If all goes well you should be able to see the archived versions of the ontologi
 
 ### Useful info
 
-It should be mentioned that for each ontology there is a change scheme that is created, where the complex changes are defined for that ontology. Each ontology gets one, as different ontologies use different properties to define terms.
+It should be mentioned that for each ontology there is a change schema that is created, where the complex changes are defined for that ontology. Each ontology gets one, as different ontologies use different properties to define terms.
 
 ==================================
 
 The fields that weren't mentioned in the config.properties folder are described here, and the cases when they should be edited:
 
-1. **Dataset_URI** is a uri prefix from which the uri's of the archives of each ontology and there change detection schemes will be created. For example, for the EFO ontology with the given Dataset_URI, it's change detection scheme can be found under the "http://www.diachron-fp7.eu/efo/changes/schema" uri in the Virtuoso server, and an archived version can be found under the "http://www.diachron-fp7.eu/resource/recordset/EFO/timestamp" uri in the Virtuoso server. You can view the residing data through the SPARQL endpoint provided by the Virtuoso server. The Dataset_URI can be changed to anything desired.
+1. **Dataset_URI** is a uri prefix from which the uri's of the archives of each ontology and there change schemas will be created. For example, for the EFO ontology with the given Dataset_URI, it's change schema can be found under the "http://www.diachron-fp7.eu/efo/changes/schema" uri in the Virtuoso server, and an archived version can be found under the "http://www.diachron-fp7.eu/resource/recordset/EFO/timestamp" uri in the Virtuoso server. You can view the residing data through the SPARQL endpoint provided by the Virtuoso server. The Dataset_URI can be changed to anything desired.
 2. **OLS_API** is the api endpoint of the OLS ontologies. This should be changed if the OLS API url changes.
 3. **Simple_Changes** are a set of changes that are predifined from the change detector. They should not be changed.
 4. **Complex_Change** are a set of changes that are defined from the user. If a new complex change needs to be added, the equivalent code for its definition should be added in the "ComplexChangesManager.java" class and in the runChangeDetection method of "DiachronArchiverService.java" class.
@@ -69,7 +69,7 @@ You need to configure the config.properties file as mentioned above, and pass th
 
 In order for the change detection to work with the Runner, two more things need to be done:
 
-1. the change scheme for the ontology needs to have been created. This can be done by manualy uploading the change scheme to the virtuoso server named (e.g. for efo): "Dataset_URI/efo/changes/schema" or by having it created by running the "OntologyDiachronizer.java" class with the ontology name as an argument (e.g.: -n efo).
+1. the change schema for the ontology needs to have been created. This can be done by manualy uploading the change schema to the virtuoso server named (e.g. for efo): "Dataset_URI/efo/changes/schema" or by having it created by running the "OntologyDiachronizer.java" class with the ontology name as an argument (e.g.: -n efo).
 2. the convertAndArchive method of "AthensOWLToDiachronConverter.java" needs to be edited in order for the correct predicate filters to be added according to the ontology that will be archived.
 
 ### Troubleshooting
