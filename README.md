@@ -56,6 +56,7 @@ The fields that weren't mentioned in the config.properties folder are described 
 
 By running the Runner.java class, you can run change detection between specific ontologies and define the versions you want to be archived. The ontologies in this case will be downloaded from Bioportal versus being downloaded from OLS as is done in the OLS crawler. 
 The arguments that need to be defined in order for the Runner to run are:
+
 -n <OntologyName> //e.g. EFO
 -h "http://<yourApacheHost>:<yourHostPort>/DIACHRONIntegrationLayer" //you need to build the Integration Layer in order for this to run
 -a "http://<yourApacheHost>:<yourHostPort>/<ArchiveService>" //the archive service
