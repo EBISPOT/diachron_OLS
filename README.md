@@ -51,7 +51,7 @@ If all goes well you should be able to see the archived versions of the ontologi
 
 ### Useful info
 
-It should be mentioned that for each ontology there is a change schema that is created, where the complex changes are defined for that ontology. Each ontology gets one, as different ontologies use different properties to define terms.
+It should be mentioned that for each ontology there is a change schema that is created, where the complex changes are defined for that ontology. Each ontology gets one, as different ontologies use different predicates to define properties.
 
 ==================================
 
