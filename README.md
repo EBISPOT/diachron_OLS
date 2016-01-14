@@ -14,7 +14,7 @@ The DIACHRON platform is comprised from several components. We are interested in
 
 ### What is OLS
 
-The [Ontology Lookup Service](http://www.ebi.ac.uk/ols/beta/) is an ontology browsing tool that holds more than 140 biomedical ontologies, and is updated every night.
+The [Ontology Lookup Service](http://www.ebi.ac.uk/ols/beta/) is a repository for bioinformatic ontologies that aims to provide a single point of access to the latest ontology versions. It currently holds more than 140 biomedical ontologies, and is updated every night.
 
 ### DIACHRON in OLS
 
