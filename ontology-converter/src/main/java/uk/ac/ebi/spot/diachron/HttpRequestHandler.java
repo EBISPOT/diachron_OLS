@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
@@ -24,6 +25,7 @@ import java.util.Map;
  * Created by olgavrou on 02/12/2015.
  */
 public class HttpRequestHandler {
+
 
     // utility function to convert InputStream to String
     private static String getStringFromInputStream(InputStream is) {
@@ -68,6 +70,33 @@ public class HttpRequestHandler {
         return sb.toString();
     }
 
+    public String executeHttpDelete(String path, Map<String,String> params) throws IOException, URISyntaxException{
+        HttpDelete httpDelete;
+        if(params == null){
+            httpDelete = new HttpDelete(path);
+        } else {
+            URIBuilder uriBuilder = new URIBuilder()
+                    .setPath(path);
+            if (params != null) {
+                for (String key : params.keySet()) {
+                    uriBuilder.addParameter(key, params.get(key));
+                }
+            }
+            URI uri = uriBuilder.build();
+            httpDelete = new HttpDelete(uri);
+
+        }
+        httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpClient client = new DefaultHttpClient();
+
+        HttpResponse response = client.execute(httpDelete);
+        if (response.getStatusLine().getStatusCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+        }
+
+        return getStringFromInputStream(response.getEntity().getContent());
+    }
+
     public String executeHttpGet(String path, Map<String,String> params) throws IOException, URISyntaxException {
         //gets a set of parameters, builds uri and executes a GET method
         //returns the content of the GET method]
@@ -100,11 +129,12 @@ public class HttpRequestHandler {
     public String executeHttpPost(String path, String json) throws IOException, URISyntaxException {
         //gets a set of parameters, builds uri and executes a POST method
         //returns the content of the POST method
+        HttpPost httpPost;
         URI uri = new URIBuilder()
                 .setPath(path)
                 .build(); //http://localhost:8081/archive-web-services/archive/templates
 
-        HttpPost httpPost = new HttpPost(uri);
+        httpPost = new HttpPost(uri);
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         httpPost.setEntity(new StringEntity(json));
@@ -116,4 +146,5 @@ public class HttpRequestHandler {
 
         return getStringFromInputStream(response.getEntity().getContent());
     }
+
 }

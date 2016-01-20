@@ -39,6 +39,7 @@ public class AthensOWLToDiachronConverter {
         this.output = properties.getProperty("OutputFolder");
         this.datasetUri = properties.getProperty("Dataset_URI");
 
+
     }
 
     public String getVersionRegexFilter() {
@@ -62,12 +63,12 @@ public class AthensOWLToDiachronConverter {
        // filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
        // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#definition"));
        // filter.add(URI.create("http://www.w3.org/2004/02/skos/core#altLabel"));
-   //     filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
-   //     filter.add(URI.create("http://purl.obolibrary.org/obo/IAO_0000115"));
-   //     filter.add(URI.create("http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
+        filter.add(URI.create("http://www.w3.org/2002/07/owl#deprecated"));
+        filter.add(URI.create("http://purl.obolibrary.org/obo/IAO_0000115"));
+        filter.add(URI.create("http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"));
+   //     filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
+   //     filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
+   //     filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
 
         Pattern p = Pattern.compile(getVersionRegexFilter());
 
@@ -160,6 +161,5 @@ public class AthensOWLToDiachronConverter {
 
             }
         }
-
     }
 }

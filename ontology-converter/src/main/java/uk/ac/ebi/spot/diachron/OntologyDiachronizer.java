@@ -1,11 +1,13 @@
 package uk.ac.ebi.spot.diachron;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.cli.ParseException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.*;
 import java.util.*;
 
 import org.codehaus.jackson.node.TextNode;
@@ -156,13 +158,14 @@ public class OntologyDiachronizer {
 
 
                         Utils utils = new Utils();
-                        String datasetId = utils.getDiachronicDataset(this.archiver, preferredPrefix);
 
                         this.newDatasetUri = datasetUri + namespace;
                         DiachronRunner runner = new DiachronRunner(this.newDatasetUri);
 
                         ComplexChangesManager complexChangesManager = new ComplexChangesManager(this.newDatasetUri, this.changeDetector);
                         String[] complexChanges = definedComplexChanges.split(",");
+
+                        String datasetId = utils.getDiachronicDataset(this.archiver, preferredPrefix);
 
                         if ((datasetId == null)) { // has no data, ontology archive not found, make the first archive of the ontology
                             log.info("First archive");

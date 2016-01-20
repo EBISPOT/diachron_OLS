@@ -51,7 +51,7 @@ public class DiachronRunner {
 
             File original = new File(outputDir, ontologyName + "-" + newVersion + ".owl");
             File output = new File(outputDir, ontologyName + "-diachronic-" + newVersion + ".owl");
-            //if(!original.exists()) {
+           // if(!original.exists()) {
                 FileOutputStream fos = new FileOutputStream(original);
                 try {
                     int read = 0;
@@ -73,14 +73,14 @@ public class DiachronRunner {
                     }
                 }
 
-            //} else {
+          //  } //else {
             //    if (stream != null){
             //        stream.close();
             //    }
             //}
             log.info("Finished writing " + ontologyName + " " + newVersion);
             log.info("Starting to convert to diachron: " + ontologyName + " " + newVersion);
-            //if(!output.exists()) {
+           // if(!output.exists()) {
                 String reasoner;
                 if (ontologyName.contains("EFO")){
                     reasoner = "hermit";
@@ -105,7 +105,7 @@ public class DiachronRunner {
                         outputStream.close();
                     }
                 }
-            //}
+          //  }
 
             log.info("Finished converting to diachron:  " + ontologyName + " " + newVersion);
 

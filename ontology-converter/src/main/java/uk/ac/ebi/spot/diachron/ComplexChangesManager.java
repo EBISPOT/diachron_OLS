@@ -456,12 +456,11 @@ public class ComplexChangesManager {
             }
             if (sc.getSelection_Filter() == null) {
                 sc.setSelection_Filter("");
-                simpleChanges.add(sc);
             } else {
                 String selFilter = sc.getSelection_Filter() + " = <" + sc.getProperty() + ">";
                 sc.setSelection_Filter(sc.getSimple_Change_Uri() + selFilter);
-                simpleChanges.add(sc);
             }
+            simpleChanges.add(sc);
         }
 
         complexC.setComplex_Change(complexChange);
@@ -473,6 +472,9 @@ public class ComplexChangesManager {
         boolean created = createComplexChanges(complexChange, complexC, deleteFirst, newDatasetUri);
         if (!created){
             log.info("Complex change " + complexChange + " was not created");
+        }
+        else {
+            log.info("Created " + complexChange);
         }
     }
 
@@ -497,20 +499,19 @@ public class ComplexChangesManager {
         if (deleteFirst) {
             //If the complex change exists but needs to be updated, it deletes it first before re-posting it
             //TODO: send it to the IntegrationLayer and check the response
-            type = type.replace(" ", "%20");
             HashMap<String, String> map = new HashMap<>();
             map.put("name", type);
             map.put("dataset_uri", newDatasetUri);
             String url = this.complexChangeService + "/diachron/complex_change/";
             HttpRequestHandler requestHandler = new HttpRequestHandler();
             try {
-                String response = requestHandler.executeHttpGet(url, map);
+                String response = requestHandler.executeHttpDelete(url, map);
             } catch (URISyntaxException | RuntimeException e) {
                 log.info(e.toString());
                 return false;
             }
-
         }
+
         //TODO: send it to the IntegrationLayer and check the response
         String url = this.complexChangeService + "/diachron/complex_change";
         ComplexChangeJson complexChangeJson = new ComplexChangeJson();
@@ -519,6 +520,7 @@ public class ComplexChangesManager {
         HttpRequestHandler requestHandler = new HttpRequestHandler();
         try {
             String response = requestHandler.executeHttpPost(url,complexChangeJson.toString());
+            log.info(response);
         } catch (URISyntaxException | RuntimeException e) {
             log.info(e.toString());
             return false;

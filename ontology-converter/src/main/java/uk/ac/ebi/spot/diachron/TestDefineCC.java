@@ -13,6 +13,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.concurrent.SynchronousQueue;
+
 /**
  *
  * @author rousakis
@@ -23,7 +28,6 @@ public class TestDefineCC {
         Client c = Client.create();
         System.out.println("Testing Define CC Service...");
         String ip = "139.91.183.48:8181";
-        ip = "139.91.183.40:8080";
         ip = "localhost:8080";
         String url = "http://" + ip + "/ForthMaven/diachron/complex_change";
         WebResource r = c.resource(url);
@@ -57,7 +61,7 @@ public class TestDefineCC {
 //        System.out.println(response.getEntity(String.class));
 //        System.out.println(response.getStatus());
 //        System.out.println("-----\n");
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 1; i < 1000; i++) {
             datasetUri = "http://test/" + i;
             JSONObject input = new JSONObject();
             input.put("Dataset_URI", datasetUri);
@@ -66,6 +70,5 @@ public class TestDefineCC {
             System.out.println(datasetUri + "\tStatus: " + response.getStatus());
             System.out.println("-----");
         }
-
     }
 }

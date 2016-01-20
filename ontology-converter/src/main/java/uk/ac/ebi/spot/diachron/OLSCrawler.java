@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Created by olgavrou on 16/12/2015.
@@ -18,6 +19,15 @@ import java.util.Iterator;
 public class OLSCrawler {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+    private PropertiesManager propertiesManager;
+    private Properties properties;
+    private String olsApi;
+
+    public OLSCrawler() {
+        this.propertiesManager = PropertiesManager.getPropertiesManager();
+        this.properties = propertiesManager.getProperties();
+        this.olsApi = this.properties.getProperty("OLS_API");
+    }
 
     public boolean crawl() {
         try {
@@ -25,7 +35,7 @@ public class OLSCrawler {
             String jsonResponse = null;
 
 
-            jsonResponse = httpRequest.executeHttpGet("http://www.ebi.ac.uk/ols/beta/api/ontologies", null);
+            jsonResponse = httpRequest.executeHttpGet(this.olsApi, null);
 
 
             ObjectMapper mapper = new ObjectMapper();
