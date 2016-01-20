@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.diachron;
 
+import EDU.oswego.cs.dl.util.concurrent.FJTask;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -86,6 +87,7 @@ public class Utils {
         return null; // if not returned then not found
     }
 
+     */
 
     public boolean areEqual(ArrayList<String> outer, ArrayList<String> inner){
         boolean containsAll = true;
@@ -99,8 +101,8 @@ public class Utils {
         }
         return containsAll;
     }
-*/
-    public String getLatestDatasetsInfo(String archiveUrl, String datasetID, String wantedInfo, String inctanceId) throws ParseException {
+
+    public String getLatestDatasetsInfo(String archiveUrl, String datasetID, String wantedInfo, String inctanceId) {
         //return the info of the latest dataset that was stored, i.e. the first one on the list (LIFO)
         //datasetId = "http://www.diachron-fp7.eu/resource/dataset/EFO/1449574886029/DE4F45B7656EBFC5377218D7A6D00B43";
         HashMap<String,String> params = new HashMap<>();
@@ -152,7 +154,7 @@ public class Utils {
                 }
             }
             return latestTime.toString();
-        }catch (NullPointerException | IOException | URISyntaxException e) {
+        }catch (NullPointerException | IOException | URISyntaxException | ParseException e) {
             log.info("Latest " + wantedInfo + " for this dataset: " + datasetID + " was not found");
             log.info(e.toString());
             return null;
