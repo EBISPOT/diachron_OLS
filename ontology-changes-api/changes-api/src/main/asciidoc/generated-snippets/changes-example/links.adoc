@@ -1,0 +1,10 @@
+|===
+|Relation|Description
+
+|self
+|Collection of change summaries for all ontologies
+
+|profile
+|Collection of specific changes for all ontologies
+
+|===

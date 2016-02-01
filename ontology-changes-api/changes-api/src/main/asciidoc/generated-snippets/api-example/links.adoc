@@ -1,0 +1,13 @@
+|===
+|Relation|Description
+
+|changesummaries
+|Collection of change summaries for all ontologies
+
+|changes
+|Collection of specific changes for all ontologies
+
+|profile
+|Link to all the properties in OLS
+
+|===

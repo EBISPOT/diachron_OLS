@@ -1,0 +1,22 @@
+[source,http]
+----
+HTTP/1.1 200 OK
+Content-Type: application/hal+json
+Content-Length: 339
+
+{
+  "_links" : {
+    "changesummaries" : {
+      "href" : "http://localhost:8080/changesummaries{?page,size,sort}",
+      "templated" : true
+    },
+    "changes" : {
+      "href" : "http://localhost:8080/changes{?page,size,sort}",
+      "templated" : true
+    },
+    "profile" : {
+      "href" : "http://localhost:8080/profile"
+    }
+  }
+}
+----

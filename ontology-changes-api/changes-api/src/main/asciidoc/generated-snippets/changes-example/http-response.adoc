@@ -1,0 +1,43 @@
+[source,http]
+----
+HTTP/1.1 200 OK
+Content-Type: application/hal+json
+Content-Length: 854
+
+{
+  "_embedded" : {
+    "changes" : [ {
+      "changeDate" : "2016-04-15T00:00:00.000+0000",
+      "ontologyName" : "efo",
+      "changeName" : "Add_label",
+      "changeSubjectUri" : "http://www.ebi.ac.uk/efo/EFO_00000001",
+      "changeProperties" : {
+        "predicate" : [ "label" ],
+        "label" : [ "new label 1" ]
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/changes/56ab89dcd4c6deab63f1da89"
+        },
+        "change" : {
+          "href" : "http://localhost:8080/changes/56ab89dcd4c6deab63f1da89"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/changes"
+    },
+    "profile" : {
+      "href" : "http://localhost:8080/profile/changes"
+    }
+  },
+  "page" : {
+    "size" : 20,
+    "totalElements" : 1,
+    "totalPages" : 1,
+    "number" : 0
+  }
+}
+----

@@ -1,0 +1,16 @@
+|===
+|Path|Type|Description
+
+|_embedded
+|Object
+|Date changed
+
+|page
+|Object
+|pages
+
+|_links
+|Object
+|Links to other resources
+
+|===
