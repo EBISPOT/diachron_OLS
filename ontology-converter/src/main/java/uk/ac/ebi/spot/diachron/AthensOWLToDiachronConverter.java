@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class AthensOWLToDiachronConverter {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public String versionRegexFilter = "*";
+    public String versionRegexFilter = "\\d*\\.?\\d*";
 
     public AthensOWLToDiachronConverter() {
 

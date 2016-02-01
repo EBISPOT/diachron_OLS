@@ -123,13 +123,13 @@ public class OWLOntologyToDiachronConverter {
         filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
 
 
-        File inputFolder  = new File("/Users/jupp/tmp/diachron/efo-last-15-owl");
+        File inputFolder  = new File("/Users/jupp/dev/ontologies/efo");
 
         String regex = "efo-(\\d\\.\\d+).owl";
         Pattern pattern = Pattern.compile(regex);
         for (File file : inputFolder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.endsWith("37.owl");
+                return name.endsWith(".owl");
             }
         })) {
 
@@ -152,7 +152,7 @@ public class OWLOntologyToDiachronConverter {
                     try {
 //                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.xml"), "RDF/XML");
 //                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.ttl"), "TURTLE");
-                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.n3"), "N3");
+                        model.save(new File("/Users/jupp/dev/diachron/virtuoso-data/diachron-efo-" + id + ".rdf.n3"), "N3");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
