@@ -1,8 +1,10 @@
 package uk.ac.ebi.spot.diachron.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -11,18 +13,19 @@ import java.util.Date;
  * @date 28/01/2016
  * Samples, Phenotypes and Ontologies Team, EMBL-EBI
  */
-@Document(collection = "changesummaries")
+//@Document(collection = "changesummaries")
 public class ChangeSummary {
 
-    @Id
-    private String id;
+//    @Id
+//    private String id;
 
-    @Indexed
+//    @Indexed
     private String changeName;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date changeDate;
 
-    @Indexed
+//    @Indexed
     private String ontologyName;
     private String version;
     private int count;
@@ -61,7 +64,7 @@ public class ChangeSummary {
     @Override
     public String toString() {
         return "ChangeSummary{" +
-                "id='" + id + '\'' +
+//                "id='" + id + '\'' +
                 ", changeName='" + changeName + '\'' +
                 ", changeDate=" + changeDate +
                 ", ontologyName='" + ontologyName + '\'' +
