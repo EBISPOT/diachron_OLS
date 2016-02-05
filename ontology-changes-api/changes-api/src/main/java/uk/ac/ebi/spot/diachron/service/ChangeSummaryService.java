@@ -90,7 +90,27 @@ public class ChangeSummaryService {
     public List<ChangeSummary>findByOntologyNameAndChangeDateBetween(@Param("ontologyName") String ontologyName,@Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date afterDate,  @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date beforeDate) {
         Aggregation agg =
                 Aggregation.newAggregation(
-                        match(Criteria.where("ontologyName").is(ontologyName).and("changeDate").lte(beforeDate).and("changeDate").gte(afterDate)),
+                        match(Criteria.where("ontologyName").is(ontologyName)
+                                .andOperator(
+                                        Criteria.where("changeDate").lte(beforeDate),Criteria.where("changeDate").gte(afterDate))),
+                        group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
+                        project("changeDate", "changeName", "ontologyName", "version", "count")
+                );
+
+        //Convert the aggregation result into a List
+        AggregationResults<ChangeSummary> groupResults
+                = mongoTemplate.aggregate(agg, "change", ChangeSummary.class);
+
+        return groupResults.getMappedResults();
+    }
+
+    public List<ChangeSummary>findByOntologyNameAndChangeNameAndChangeDateBetween(@Param("ontologyName") String ontologyName, @Param("changeName") String changeName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date afterDate,  @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date beforeDate) {
+        Aggregation agg =
+                Aggregation.newAggregation(
+                        match(Criteria.where("ontologyName").is(ontologyName)
+                                .and("changeName").is(changeName)
+                                .andOperator(
+                                        Criteria.where("changeDate").lte(beforeDate),Criteria.where("changeDate").gte(afterDate))),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
                         project("changeDate", "changeName", "ontologyName", "version", "count")
                 );

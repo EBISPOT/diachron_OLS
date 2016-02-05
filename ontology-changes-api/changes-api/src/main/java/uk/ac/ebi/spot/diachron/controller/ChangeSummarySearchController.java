@@ -38,7 +38,7 @@ public class ChangeSummarySearchController implements
     @Autowired
     ChangeSummaryService changeSummaryService;
 
-    @RequestMapping(path = "/search/dates", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    @RequestMapping(path = "/dates", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     HttpEntity<List<DateSummary>> findByOntologyName
             (
                     @RequestParam("size") long size,
@@ -50,7 +50,7 @@ public class ChangeSummarySearchController implements
 
     }
 
-    @RequestMapping(path = "/search/findByOntologyNameAndChangeDateAfter", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    @RequestMapping(path = "/findByOntologyNameAndChangeDateAfter", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     HttpEntity<List<ChangeSummary>> findByOntologyNameAndChangeDateAfter(
             @RequestParam("ontologyName") String ontologyName,
             @RequestParam("after")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after
@@ -61,7 +61,7 @@ public class ChangeSummarySearchController implements
 
     }
 
-    @RequestMapping(path = "/search/findByOntologyNameAndChangeDateBefore", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    @RequestMapping(path = "/findByOntologyNameAndChangeDateBefore", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     HttpEntity<List<ChangeSummary>> findByOntologyNameAndChangeDateBefore(
             @RequestParam("ontologyName") String ontologyName,
             @RequestParam("before")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before
@@ -72,13 +72,25 @@ public class ChangeSummarySearchController implements
 
     }
 
-    @RequestMapping(path = "/search/findByOntologyNameAndChangeDateBetween", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    @RequestMapping(path = "/findByOntologyNameAndChangeDateBetween", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     HttpEntity<List<ChangeSummary>> findByOntologyNameAndChangeDateBetween(
             @RequestParam("ontologyName") String ontologyName,
             @RequestParam("after")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after,
             @RequestParam("before")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before
     ) throws ResourceNotFoundException {
         List<ChangeSummary> summaries = changeSummaryService.findByOntologyNameAndChangeDateBetween(ontologyName, after, before);
+        return new ResponseEntity<>( summaries , HttpStatus.OK);
+
+    }
+
+    @RequestMapping(path = "/findByOntologyNameAndChangeNameAndChangeDateBetween", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    HttpEntity<List<ChangeSummary>> findByOntologyNameAndChangeNameAndChangeDateBetween(
+            @RequestParam("ontologyName") String ontologyName,
+            @RequestParam("changeName") String changeName,
+            @RequestParam("after")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after,
+            @RequestParam("before")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before
+    ) throws ResourceNotFoundException {
+        List<ChangeSummary> summaries = changeSummaryService.findByOntologyNameAndChangeNameAndChangeDateBetween(ontologyName,changeName, after, before);
         return new ResponseEntity<>( summaries , HttpStatus.OK);
 
     }

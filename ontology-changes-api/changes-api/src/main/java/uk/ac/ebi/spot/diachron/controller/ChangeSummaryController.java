@@ -60,9 +60,10 @@ public class ChangeSummaryController implements
         Resources<ChangeSummary> resources = new Resources<ChangeSummary>(new ArrayList<>());
 
         resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class, "size", "ontologyName").slash("dates").withRel("dates")  );
-        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeDateAfter{?ontologyName,after}").withRel("findByOntologyNameAndChangeDateAfter")  );
-        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeDateBefore{?ontologyName,before}").withRel("findByOntologyNameAndChangeDateBefore")  );
-        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeDateBetween{?ontologyName,after,before}").withRel("findByOntologyNameAndChangeDateBetween") );
+        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeDateAfter").withRel("findByOntologyNameAndChangeDateAfter")  );
+        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeDateBefore").withRel("findByOntologyNameAndChangeDateBefore")  );
+        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeDateBetween").withRel("findByOntologyNameAndChangeDateBetween") );
+        resources.add(ControllerLinkBuilder.linkTo(ChangeSummarySearchController.class).slash("findByOntologyNameAndChangeNameAndChangeDateBetween").withRel("findByOntologyNameAndChangeNameAndChangeDateBetween") );
         return new ResponseEntity<>( resources , HttpStatus.OK);
 
     }
