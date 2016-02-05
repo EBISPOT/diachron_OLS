@@ -52,7 +52,7 @@ public class ChangesApp  implements CommandLineRunner {
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(0);
-        cal.set(2016, 3, 15);
+        cal.set(2015, 3, 15);
         Date date = cal.getTime(); // get back a Date object
 
 //        changeSummaryRepository.save(new ChangeSummary("Add_label", date, "efo", "2.67", 12));
@@ -83,7 +83,7 @@ public class ChangesApp  implements CommandLineRunner {
         changeRepository.save(new Change(date, "efo", "Delete_synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
 
         cal.setTimeInMillis(0);
-        cal.set(2016, 4, 15);
+        cal.set(2015, 4, 15);
         date = cal.getTime(); // get back a Date object
 
         changeRepository.save(new Change(date, "efo", "Add_label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
@@ -105,7 +105,7 @@ public class ChangesApp  implements CommandLineRunner {
         changeRepository.save(new Change(date, "efo", "Delete_synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
 
         cal.setTimeInMillis(0);
-        cal.set(2016, 5, 15);
+        cal.set(2015, 5, 15);
         date = cal.getTime(); // get back a Date object
 
         changeRepository.save(new Change(date, "efo", "Add_label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
@@ -136,9 +136,8 @@ public class ChangesApp  implements CommandLineRunner {
 //        changeSummaryRepository.save(new ChangeSummary("Delete_class", date, "efo", "2.67", 42))    ;
 //        changeSummaryRepository.save(new ChangeSummary("Delete_definition", date, "efo", "2.67", 75));
 
-        System.out.println("By ontology name EFO");
+        System.out.println("Get changes before today");
         System.out.println("--------------------");
-
 
         for (ChangeSummary changeSummary : changeSummaryService.findByOntologyNameAndChangeDateBefore("efo", new Date())) {
             System.out.println(changeSummary.toString());
