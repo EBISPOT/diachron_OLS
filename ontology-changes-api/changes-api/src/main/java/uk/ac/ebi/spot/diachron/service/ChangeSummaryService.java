@@ -44,7 +44,8 @@ public class ChangeSummaryService {
                         match(Criteria.where("ontologyName").is(ontologyName)),
                         group("changeDate", "ontologyName").count().as("count"),
                         limit(numberOfDates),
-                        project("changeDate", "ontologyName", "count")
+                        project("changeDate", "ontologyName", "count"),
+                        sort(Sort.Direction.DESC, "changeDate")
 
                 );
         System.out.println(agg);
@@ -62,7 +63,8 @@ public class ChangeSummaryService {
                 Aggregation.newAggregation(
                         match(Criteria.where("ontologyName").is(ontologyName).and("changeDate").gte(afterDate)),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
-                        project("changeDate", "changeName", "ontologyName", "version", "count")
+                        project("changeDate", "changeName", "ontologyName", "version", "count"),
+                        sort(Sort.Direction.DESC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
@@ -77,7 +79,8 @@ public class ChangeSummaryService {
                 Aggregation.newAggregation(
                         match(Criteria.where("ontologyName").is(ontologyName).and("changeDate").lte(beforeDate)),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
-                        project("changeDate", "changeName", "ontologyName", "version", "count")
+                        project("changeDate", "changeName", "ontologyName", "version", "count"),
+                        sort(Sort.Direction.DESC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
@@ -94,7 +97,8 @@ public class ChangeSummaryService {
                                 .andOperator(
                                         Criteria.where("changeDate").lte(beforeDate),Criteria.where("changeDate").gte(afterDate))),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
-                        project("changeDate", "changeName", "ontologyName", "version", "count")
+                        project("changeDate", "changeName", "ontologyName", "version", "count"),
+                        sort(Sort.Direction.DESC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
@@ -112,7 +116,8 @@ public class ChangeSummaryService {
                                 .andOperator(
                                         Criteria.where("changeDate").lte(beforeDate),Criteria.where("changeDate").gte(afterDate))),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
-                        project("changeDate", "changeName", "ontologyName", "version", "count")
+                        project("changeDate", "changeName", "ontologyName", "version", "count"),
+                        sort(Sort.Direction.DESC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
