@@ -86,15 +86,17 @@ public class HttpRequestHandler {
             httpDelete = new HttpDelete(uri);
 
         }
-        httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        HttpClient client = new DefaultHttpClient();
 
-        HttpResponse response = client.execute(httpDelete);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-        }
+            httpDelete.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            HttpClient client = new DefaultHttpClient();
 
-        return getStringFromInputStream(response.getEntity().getContent());
+            HttpResponse response = client.execute(httpDelete);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            return getStringFromInputStream(response.getEntity().getContent());
+
     }
 
     public String executeHttpGet(String path, Map<String,String> params) throws IOException, URISyntaxException {
@@ -106,45 +108,79 @@ public class HttpRequestHandler {
         } else {
             URIBuilder uriBuilder = new URIBuilder()
                     .setPath(path); //http://localhost:8081/archive-web-services/archive/templates
-            if (params != null) {
-                for (String key : params.keySet()) {
-                    uriBuilder.addParameter(key, params.get(key));
-                }
+            for (String key : params.keySet()) {
+                uriBuilder.addParameter(key, params.get(key));
             }
+
             URI uri = uriBuilder.build();
             httpGet = new HttpGet(uri);
 
         }
-        httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        HttpClient client = new DefaultHttpClient();
 
-        HttpResponse response = client.execute(httpGet);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-        }
+            httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            HttpClient client = new DefaultHttpClient();
 
-        return getStringFromInputStream(response.getEntity().getContent());
+            HttpResponse response = client.execute(httpGet);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            return getStringFromInputStream(response.getEntity().getContent());
+
     }
 
+    //Post with JSON
     public String executeHttpPost(String path, String json) throws IOException, URISyntaxException {
         //gets a set of parameters, builds uri and executes a POST method
         //returns the content of the POST method
-        HttpPost httpPost;
         URI uri = new URIBuilder()
                 .setPath(path)
                 .build(); //http://localhost:8081/archive-web-services/archive/templates
+        HttpPost httpPost = new HttpPost(uri);
 
-        httpPost = new HttpPost(uri);
-        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
-        httpPost.setEntity(new StringEntity(json));
-        HttpClient client = new DefaultHttpClient();
-        HttpResponse response = client.execute(httpPost);
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            httpPost.setEntity(new StringEntity(json));
+            HttpClient client = new DefaultHttpClient();
+            HttpResponse response = client.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            return getStringFromInputStream(response.getEntity().getContent());
+
+    }
+
+    //Post with passing parameters
+    public String executeHttpPost(String path, Map<String,String> params) throws IOException, URISyntaxException {
+        //gets a set of parameters, builds uri and executes a POST method
+        //returns the content of the POST method]
+        HttpPost httpPost;
+        if(params == null){
+            httpPost = new HttpPost(path);
+        } else {
+            URIBuilder uriBuilder = new URIBuilder()
+                    .setPath(path); //http://localhost:8081/archive-web-services/archive/templates
+            for (String key : params.keySet()) {
+                uriBuilder.addParameter(key, params.get(key));
+            }
+
+            URI uri = uriBuilder.build();
+            httpPost = new HttpPost(uri);
+
         }
 
-        return getStringFromInputStream(response.getEntity().getContent());
+            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            HttpClient client = new DefaultHttpClient();
+
+            HttpResponse response = client.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            return getStringFromInputStream(response.getEntity().getContent());
+
     }
+
 
 }

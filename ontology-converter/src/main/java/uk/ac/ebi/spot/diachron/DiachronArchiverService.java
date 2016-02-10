@@ -19,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -88,7 +90,67 @@ public class DiachronArchiverService {
 
 
     public String archive (File input, String diachronicDatasetId, String version) throws DiachronException {
+        //TODO: GeneralUploadRDF
+       /* String url = this.integrationService + "/webresources/GeneralUploadRDF/";
+        HttpRequestHandler requestHandler = new HttpRequestHandler();
+        try {
+            HashMap map = new HashMap();
+            map.put("file",input.getAbsolutePath());
+            map.put("datasetName", "GO");
+            map.put("label","GO");
+            map.put("creator","EMBL-EBI");
+            map.put("converterType","ontology");
+            map.put("reasoner","elk");
 
+            String archiveUrl = this.integrationService + "/webresources/GeneralUploadRDF/upload";
+            HttpPost httpPost= new HttpPost(archiveUrl);
+
+            FileBody uploadFilePart = new FileBody(input);
+            StringBody datasetName = new StringBody("GO");
+            StringBody label = new StringBody("GO");
+            StringBody creator = new StringBody("EMBL-EBI");
+            StringBody converterType = new StringBody("ontology");
+            StringBody reasoner = new StringBody("elk");
+            StringBody format = new StringBody("RDF/XML");
+            StringBody filters = new StringBody("");
+
+
+
+            MultipartEntity reqEntity = new MultipartEntity();
+            reqEntity.addPart("file", uploadFilePart);
+            reqEntity.addPart("datasetName", datasetName);
+            reqEntity.addPart("label", label);
+            reqEntity.addPart("creator", creator);
+            reqEntity.addPart("converterType", converterType);
+            reqEntity.addPart("reasoner", reasoner);
+            reqEntity.addPart("format", format);
+            reqEntity.addPart("filters",filters);
+
+            httpPost.setEntity(reqEntity);
+
+            HttpClient client = new DefaultHttpClient();
+
+            HttpResponse response = client.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            Response responseBean = mapper.readValue(response.getEntity().getContent(), Response.class);
+
+            if (responseBean.isSuccess() && responseBean.getData() != null) {
+                return responseBean.getData();
+            }
+            else {
+                throw new DiachronException ("Couldn't archive dataset " + responseBean.getMessage());
+            }
+
+        } catch ( RuntimeException | IOException e) {
+            log.info(e.toString());
+
+        }
+        throw new DiachronException ("Couldn't archive dataset: " + input.toString());
+*/
         String archiveUrl = archiver + "/archive/dataset/version";
         HttpPost httpPost= new HttpPost(archiveUrl);
 
@@ -148,6 +210,7 @@ public class DiachronArchiverService {
                 HttpClient client = new DefaultHttpClient();
                 httpPost.setEntity(entity);
                 HttpResponse response = client.execute(httpPost);
+                System.out.println(response.toString());
                 if (response.getStatusLine().getStatusCode() != 200) {
                     throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
                 }

@@ -23,14 +23,14 @@ public class ComplexChangesManager {
 
     private String newDatasetUri;
     private HttpRequestHandler httpRequest;
-    private String complexChangeService;
+    private String changeDetector;
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
-    public ComplexChangesManager(String newDatasetUri, String complexChangeService) {
+    public ComplexChangesManager(String newDatasetUri, String integrationLayer) {
         this.newDatasetUri = newDatasetUri;
         this.httpRequest = new HttpRequestHandler();
-        this.complexChangeService = complexChangeService;
+        this.changeDetector = integrationLayer;
     }
 
     //TODO: probalby needs to return the status
@@ -484,7 +484,7 @@ public class ComplexChangesManager {
         for (String cc : complexChanges) {
             cc = cc.replace(" ", "%20");
             Client c = Client.create();
-            String url = this.complexChangeService + "/diachron/complex_change/?name=" + cc + "&dataset_uri=" + newDatasetUri;
+            String url = this.changeDetector + "/diachron/complex_change/?name=" + cc + "&dataset_uri=" + newDatasetUri;
             WebResource r = c.resource(url);
 
             ClientResponse response = r.accept(MediaType.APPLICATION_JSON).delete(ClientResponse.class, cc);
@@ -502,10 +502,12 @@ public class ComplexChangesManager {
             HashMap<String, String> map = new HashMap<>();
             map.put("name", type);
             map.put("dataset_uri", newDatasetUri);
-            String url = this.complexChangeService + "/diachron/complex_change/";
+           // String url = this.integrationLayer + "/webresources/complex_change/";
+            String url = this.changeDetector + "/diachron/complex_change/";
             HttpRequestHandler requestHandler = new HttpRequestHandler();
             try {
                 String response = requestHandler.executeHttpDelete(url, map);
+                log.info(response);
             } catch (URISyntaxException | RuntimeException e) {
                 log.info(e.toString());
                 return false;
@@ -513,7 +515,8 @@ public class ComplexChangesManager {
         }
 
         //TODO: send it to the IntegrationLayer and check the response
-        String url = this.complexChangeService + "/diachron/complex_change";
+       // String url = this.integrationLayer + "/webresources/complex_change/";
+        String url = this.changeDetector + "/diachron/complex_change";
         ComplexChangeJson complexChangeJson = new ComplexChangeJson();
         complexChangeJson.setDataset_URI(newDatasetUri);
         complexChangeJson.setCC_Definition(complexChange);
@@ -534,7 +537,8 @@ public class ComplexChangesManager {
             HashMap<String, String> map = new HashMap<>();
             map.put("name", complexChangeType);
             map.put("dataset_uri", this.newDatasetUri);
-            String jsonResponse = httpRequest.executeHttpGet(this.complexChangeService + "/diachron/complex_change/", map);
+          //  String jsonResponse = httpRequest.executeHttpGet(this.integrationLayer + "/webresources/complex_change/", map);
+             String jsonResponse = httpRequest.executeHttpGet(this.changeDetector + "/diachron/complex_change/", map);
 
             JSONParser parser = new JSONParser();
                 org.json.simple.JSONObject response = (org.json.simple.JSONObject) parser.parse(jsonResponse);

@@ -7,7 +7,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.*;
 import java.util.*;
 
 import org.codehaus.jackson.node.TextNode;
@@ -168,7 +167,8 @@ public class OntologyDiachronizer {
                         String datasetId = utils.getDiachronicDataset(this.archiver, preferredPrefix);
 
                         if ((datasetId == null)) { // has no data, ontology archive not found, make the first archive of the ontology
-                            log.info("First archive");
+                            log.info("First archive.");
+                            log.info("Testing 123");
                             //Add a new graph for the changes to be stored for this ontology
 
                             for (String complexChange : complexChanges) {
@@ -182,7 +182,6 @@ public class OntologyDiachronizer {
                          //   AthensOWLToDiachronConverter converter = new AthensOWLToDiachronConverter();
                         //    converter.convertAndArchive(preferredPrefix, "870f31f0-237d-42ed-bf72-6f3b53ceec54", 20, new File(this.output), this.integrationLayer, this.archiver, filter);
                             runner.convertArchiveAndChangeDetection(preferredPrefix, fileLocation, version, null, new File(this.output), filter, this.integrationLayer, this.archiver, this.changeDetector);
-
                         } else { //the dataset exists. Find out if there is a new one loaded
                             // if a different version was loaded, then we will need to archive the new version and run the change detection
 
@@ -207,6 +206,7 @@ public class OntologyDiachronizer {
                                         log.info(e.toString());
                                     }
                                 }
+                                log.info("Archiving without defining complex changes test.");
                                 runner.convertArchiveAndChangeDetection(preferredPrefix, fileLocation, version, null, new File(this.output), filter, this.integrationLayer, this.archiver, this.changeDetector);
                              //   archived++;
                             } else {
@@ -279,6 +279,7 @@ public class OntologyDiachronizer {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
+
         try {
             int statusCode = parseArguments(args);
 

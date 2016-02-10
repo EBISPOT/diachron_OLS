@@ -3,6 +3,14 @@ package uk.ac.ebi.spot.diachron;
 import org.athena.imis.diachron.archive.datamapping.OntologyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.ac.ebi.spot.diachron.datachanges.StoreChanges;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
 
 import java.io.*;
 import java.net.SocketException;
@@ -37,7 +45,6 @@ public class DiachronRunner {
         newVersion = newVersion.replace("releases/", "");
         newVersion = newVersion.replace("-",".");
 
-
         log.info("reading " + ontologyName + " " + newVersion);
 
         InputStream stream = null;
@@ -48,10 +55,9 @@ public class DiachronRunner {
         }
 
         try {
-
             File original = new File(outputDir, ontologyName + "-" + newVersion + ".owl");
             File output = new File(outputDir, ontologyName + "-diachronic-" + newVersion + ".owl");
-           // if(!original.exists()) {
+            //if(!original.exists()) {
                 FileOutputStream fos = new FileOutputStream(original);
                 try {
                     int read = 0;
@@ -73,14 +79,14 @@ public class DiachronRunner {
                     }
                 }
 
-          //  } //else {
+            //}///else {
             //    if (stream != null){
             //        stream.close();
             //    }
             //}
             log.info("Finished writing " + ontologyName + " " + newVersion);
             log.info("Starting to convert to diachron: " + ontologyName + " " + newVersion);
-           // if(!output.exists()) {
+         //   if(!output.exists()) {
                 String reasoner;
                 if (ontologyName.contains("EFO")){
                     reasoner = "hermit";
@@ -105,7 +111,7 @@ public class DiachronRunner {
                         outputStream.close();
                     }
                 }
-          //  }
+           // }
 
             log.info("Finished converting to diachron:  " + ontologyName + " " + newVersion);
 
@@ -121,6 +127,28 @@ public class DiachronRunner {
                 if (oldRecordSetId != null) {
                     log.info("Running change detection between " + recordSetId + " and " + oldRecordSetId);
                     archiveService.runChangeDetection(recordSetId, oldRecordSetId, this.newDatasetUri);
+
+                    //------------------ save changes to mongodb -----------------------
+                    DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+                    Date date = Calendar.getInstance().getTime();
+                    String dateString = df.format(date).toString();
+                    StoreChanges storeChanges = new StoreChanges(ontologyName.toLowerCase(),this.newDatasetUri,oldRecordSetId,recordSetId,newVersion,dateString);
+                    try {
+                        //TODO: replace with integration layer API when it is fixed
+                        String changes = storeChanges.getChanges();
+                        if(changes != null){
+                            //TODO: put these in the config.properties file
+                            storeChanges.storeChanges("diachron","change", changes);
+                        } else {
+                            log.info("No changes found for this ontology");
+                        }
+                    } catch (IOException e) {
+                        log.info(e.toString());
+                    } finally {
+                        storeChanges.terminate();
+                    }
+
+                    //-------------------------------------------------------------------
                 }
             }
         } catch (IOException | DiachronException e) {
