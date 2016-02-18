@@ -119,7 +119,6 @@ public class Utils {
             Date latestTime = null;
             Date currentTime = null;
             JsonNode next = null;
-            String foundWantetInfo = null;
             DateFormat format = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
             while (iter.hasNext()) {
                 next = (JsonNode) iter.next();
@@ -139,7 +138,6 @@ public class Utils {
                         }
                         latestEntry = latestEntry.replace("-",":").replace("T",":").replace("Z","").split("\\.")[0];
                         latestTime = format.parse(latestEntry);
-                        foundWantetInfo = next.get(wantedInfo).get("value").getTextValue();
                     } else {
                         if (next.get("creationTime") != null){
                             currentEntry = next.get("creationTime").get("value").getTextValue();
@@ -150,13 +148,12 @@ public class Utils {
                         currentTime = format.parse(currentEntry);
                         if(currentTime.after(latestTime)){
                             latestTime = currentTime;
-                            foundWantetInfo = next.get(wantedInfo).get("value").getTextValue();
                         }
                     }
                     //return next.get(wantedInfo).get("value").getTextValue();
                 }
             }
-            return foundWantetInfo;
+            return latestTime.toString();
         }catch (NullPointerException | IOException | URISyntaxException | ParseException e) {
             log.info("Latest " + wantedInfo + " for this dataset: " + datasetID + " was not found");
             log.info(e.toString());
