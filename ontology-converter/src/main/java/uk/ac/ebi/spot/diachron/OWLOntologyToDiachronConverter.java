@@ -7,9 +7,12 @@ import org.coode.owlapi.rdf.model.RDFLiteralNode;
 import org.coode.owlapi.rdf.model.RDFResourceNode;
 import org.coode.owlapi.rdf.model.RDFTriple;
 import org.semanticweb.HermiT.Reasoner;
+import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.InferredEntityAxiomGenerator;
 import org.semanticweb.owlapi.util.InferredSubClassAxiomGenerator;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -41,8 +44,20 @@ public class OWLOntologyToDiachronConverter {
             OWLOntology ontology = manager.loadOntologyFromOntologyDocument(ontologyFile);
 
             // create a reasoner factory and classify ontology
-            Reasoner.ReasonerFactory owlReasonerFactory = new Reasoner.ReasonerFactory();
-            OWLReasoner owlReasoner = owlReasonerFactory.createReasoner(ontology);
+            String reasoner = "elk";
+            // create a reasoner factory and classify ontology
+            OWLReasoner owlReasoner = null;
+
+            if (reasoner.equals("elk")) {
+                ElkReasonerFactory elkReasonerFactory = new ElkReasonerFactory();
+                owlReasoner = elkReasonerFactory.createReasoner(ontology);
+            } else if (reasoner.equals("hermit")) {
+                Reasoner.ReasonerFactory owlReasonerFactory = new Reasoner.ReasonerFactory();
+                owlReasoner = owlReasonerFactory.createReasoner(ontology);
+            } else {
+                OWLReasonerFactory structuralReasonerFactory = new StructuralReasonerFactory();
+                owlReasoner = structuralReasonerFactory.createReasoner(ontology);
+            }
 
             OWLOntology reasonedOntology = owlReasoner.getRootOntology();
 
@@ -118,14 +133,14 @@ public class OWLOntologyToDiachronConverter {
 
         Collection<URI> filter = new HashSet<URI>();
         filter.add(OWLRDFVocabulary.RDFS_LABEL.getIRI().toURI());
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/definition"));
-        filter.add(URI.create("http://www.ebi.ac.uk/efo/alternative_term"));
+       // filter.add(URI.create("http://www.geneontology.org/reason_for_obsolescence"));
+       // filter.add(URI.create("http://www.geneontology.org/definition"));
+       // filter.add(URI.create("http://www.geneontology.org/alternative_term"));
 
 
-        File inputFolder  = new File("/Users/jupp/dev/ontologies/efo");
+        File inputFolder  = new File("/Users/olgavrou/Projects/diachron/output/UBERON");
 
-        String regex = "efo-(\\d\\.\\d+).owl";
+        String regex = "ext-(\\d\\.\\d+).owl";
         Pattern pattern = Pattern.compile(regex);
         for (File file : inputFolder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -145,14 +160,14 @@ public class OWLOntologyToDiachronConverter {
                     converter = new OWLOntologyToDiachronConverter(
                             new BufferedInputStream(
                                     new FileInputStream(file)),
-                            "efo",
+                            "ext",
                             id,
                             filter );
                     DiachronJenaModel model = new DiachronJenaModel(converter.getDiachronDataset());
                     try {
 //                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.xml"), "RDF/XML");
 //                        model.save(new File("/Users/jupp/tmp/diachron/diachron-efo-" + id + ".rdf.ttl"), "TURTLE");
-                        model.save(new File("/Users/jupp/dev/diachron/virtuoso-data/diachron-efo-" + id + ".rdf.n3"), "N3");
+                        model.save(new File("/Users/olgavrou/Projects/diachron/output/UBERON/diachron-ext-" + id + ".rdf.n3"), "N3");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
