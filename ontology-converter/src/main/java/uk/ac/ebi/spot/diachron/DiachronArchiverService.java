@@ -19,8 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,23 +33,26 @@ import java.util.List;
  */
 public class DiachronArchiverService {
 
-    private String integrationService = "http://localhost:8080/DIACHRONIntegrationLayer";
+    private String integrationService = "";
     private Logger log = LoggerFactory.getLogger(getClass());
 
 //    private static String internalServerUrl = "http://banana.ebi.ac.uk:55000";
-    private String internalServerUrl = "http://localhost:8080";
-    public DiachronArchiverService(String integrationService, String baseServerUrl) {
+    private String archiver = "";
+    private String changeDetecotr = "";
+    public DiachronArchiverService(String integrationService, String archiver, String changeDetecotr) {
 
         this.integrationService = integrationService;
-        this.internalServerUrl = baseServerUrl;
+        this.archiver = archiver;
+        this.changeDetecotr = changeDetecotr;
     }
 
     // returns an instance id
     public String createDiachronicDatasetId (String datasetName, String label, String creator) throws DiachronException {
 
-        String existingDatasetId = getDiachronicDatasetId(datasetName);
+        Utils utils = new Utils();
+        String existingDatasetId = utils.getDiachronicDataset(this.archiver , datasetName); //getDiachronicDatasetId(datasetName);
         if (existingDatasetId == null) {
-            HttpPost httpPost = new HttpPost(internalServerUrl + "/archive-web-services/archive/dataset");
+            HttpPost httpPost = new HttpPost(archiver + "/archive/dataset");
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             CreateArchiveRequest requestBean = new CreateArchiveRequest(datasetName, label, creator);
             JSONObject jsonRequestBean = new JSONObject(requestBean);
@@ -85,8 +90,68 @@ public class DiachronArchiverService {
 
 
     public String archive (File input, String diachronicDatasetId, String version) throws DiachronException {
+        //TODO: GeneralUploadRDF
+       /* String url = this.integrationService + "/webresources/GeneralUploadRDF/";
+        HttpRequestHandler requestHandler = new HttpRequestHandler();
+        try {
+            HashMap map = new HashMap();
+            map.put("file",input.getAbsolutePath());
+            map.put("datasetName", "GO");
+            map.put("label","GO");
+            map.put("creator","EMBL-EBI");
+            map.put("converterType","ontology");
+            map.put("reasoner","elk");
 
-        String archiveUrl = internalServerUrl + "/archive-web-services/archive/dataset/version";
+            String archiveUrl = this.integrationService + "/webresources/GeneralUploadRDF/upload";
+            HttpPost httpPost= new HttpPost(archiveUrl);
+
+            FileBody uploadFilePart = new FileBody(input);
+            StringBody datasetName = new StringBody("GO");
+            StringBody label = new StringBody("GO");
+            StringBody creator = new StringBody("EMBL-EBI");
+            StringBody converterType = new StringBody("ontology");
+            StringBody reasoner = new StringBody("elk");
+            StringBody format = new StringBody("RDF/XML");
+            StringBody filters = new StringBody("");
+
+
+
+            MultipartEntity reqEntity = new MultipartEntity();
+            reqEntity.addPart("file", uploadFilePart);
+            reqEntity.addPart("datasetName", datasetName);
+            reqEntity.addPart("label", label);
+            reqEntity.addPart("creator", creator);
+            reqEntity.addPart("converterType", converterType);
+            reqEntity.addPart("reasoner", reasoner);
+            reqEntity.addPart("format", format);
+            reqEntity.addPart("filters",filters);
+
+            httpPost.setEntity(reqEntity);
+
+            HttpClient client = new DefaultHttpClient();
+
+            HttpResponse response = client.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            Response responseBean = mapper.readValue(response.getEntity().getContent(), Response.class);
+
+            if (responseBean.isSuccess() && responseBean.getData() != null) {
+                return responseBean.getData();
+            }
+            else {
+                throw new DiachronException ("Couldn't archive dataset " + responseBean.getMessage());
+            }
+
+        } catch ( RuntimeException | IOException e) {
+            log.info(e.toString());
+
+        }
+        throw new DiachronException ("Couldn't archive dataset: " + input.toString());
+*/
+        String archiveUrl = archiver + "/archive/dataset/version";
         HttpPost httpPost= new HttpPost(archiveUrl);
 
         log.debug("archiving" + diachronicDatasetId + " to " + archiveUrl);
@@ -127,14 +192,15 @@ public class DiachronArchiverService {
 
     }
 
-    public void runChangeDetection (String newVersionId, String oldVersionId) throws DiachronException {
+    public void runChangeDetection (String newVersionId, String oldVersionId, String datasetUri) throws DiachronException {
 
         if (newVersionId != null && oldVersionId != null) {
-            HttpPost httpPost = new HttpPost(this.integrationService + "/webresources/ComplexChangeDispatcher");
+           // HttpPost httpPost = new HttpPost(this.integrationService + "/webresources/ComplexChangeDispatcher");
+            HttpPost httpPost = new HttpPost(this.changeDetecotr + "/diachron/change_detection");
             httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 //            ChangeRequest requestBean = new ChangeRequest(oldVersionId, newVersionId, true, new ArrayList<String>());
 
-            String jsonRequestBean = "{\"Old_Version\":\"" + oldVersionId + "\",\"Ingest\":true,\"New_Version\":\"" + newVersionId + "\",\"Complex_Changes\":[]}\n";
+            String jsonRequestBean = "{\"Dataset_URI\":\"" + datasetUri + "\",\"Old_Version\":\"" + oldVersionId + "\",\"Ingest\":true,\"New_Version\":\"" + newVersionId + "\",\"Complex_Changes\":[\"Add Definition\",\"Add Synonym\",\"Delete Definition\",\"Delete Synonym\",\"ADD LABEL\",\"DELETE LABEL\",\"ADD CLASS\",\"DELETE CLASS\",\"Mark as Obsolete\"] ,\"Associations\": null}\n";
 //            JSONObject jsonRequestBean = new JSONObject(requestBean);
             System.out.println(jsonRequestBean);
 
@@ -144,6 +210,7 @@ public class DiachronArchiverService {
                 HttpClient client = new DefaultHttpClient();
                 httpPost.setEntity(entity);
                 HttpResponse response = client.execute(httpPost);
+                System.out.println(response.toString());
                 if (response.getStatusLine().getStatusCode() != 200) {
                     throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
                 }
@@ -159,7 +226,7 @@ public class DiachronArchiverService {
         List<String> results = new ArrayList<String>();
         if (diachronicDatasetId != null) {
             try {
-                HttpGet httpGet= new HttpGet(internalServerUrl + "/archive-web-services/archive/templates?name=listDatasets&diachronicDatasetId=" + URLEncoder.encode(diachronicDatasetId, "UTF-8"));
+                HttpGet httpGet= new HttpGet(archiver + "/archive/templates?name=listDatasets&diachronicDatasetId=" + URLEncoder.encode(diachronicDatasetId, "UTF-8"));
                 httpGet.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse response = client.execute(httpGet);
@@ -274,7 +341,7 @@ public class DiachronArchiverService {
 
 
     public static void main(String[] args) {
-        DiachronArchiverService service = new DiachronArchiverService("http://localhost:8080/DACHRONIntegrationLayer", "http://localhost:8080");
+        DiachronArchiverService service = new DiachronArchiverService("http://localhost:8080/DACHRONIntegrationLayer", "http://localhost:8080/archive-web-services", "http://localhost:8080/ForthMaven");
         try {
 
             System.out.println("trying to create a new EFO...");
@@ -293,7 +360,7 @@ public class DiachronArchiverService {
                     System.out.println("Record set id: " + versionId);
 
                     if (previousId != null) {
-                        service.runChangeDetection(versionId, previousId);
+                        service.runChangeDetection(versionId, previousId, "Dataset_URI");
 
                     }
                     previousId = versionId;
