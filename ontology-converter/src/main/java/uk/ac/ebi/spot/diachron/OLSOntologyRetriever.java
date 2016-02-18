@@ -21,10 +21,9 @@ public class OLSOntologyRetriever {
 
     public InputStream getOntology(String fileLocation) {
         HttpURLConnection conn = null;
-        URLConnection connection = null;
         try {
             URL url = new URL(fileLocation);
-            connection = url.openConnection();
+            URLConnection connection = url.openConnection();
             conn = (HttpURLConnection) connection;
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "text/html");
@@ -35,7 +34,6 @@ public class OLSOntologyRetriever {
                 String location = conn.getHeaderField("Location");
                 if (location != null) {
                     conn.disconnect();
-                    ((HttpURLConnection) connection).disconnect();
                     url = new URL(location);
                     connection = url.openConnection();
                     if (location.contains("ftp") || location.contains("FTP")){

@@ -1,0 +1,6 @@
+[source,http]
+----
+GET /changes HTTP/1.1
+Host: localhost
+
+----
