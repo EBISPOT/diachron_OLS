@@ -35,6 +35,8 @@ public interface ChangeRepository extends MongoRepository<Change, String> {
 
     Page<Change> findByOntologyNameAndChangeDateBetween(@Param("ontologyName") String ontologyName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after, @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before, Pageable pageable);
 
+    Page<Change> findByOntologyNameAndChangeDate(@Param("ontologyName") String ontologyName, @Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date, Pageable pageable);
+
     Page<Change> findByOntologyNameAndChangeNameAndChangeDateBetween(@Param("ontologyName") String ontologyName, @Param("changeName") String changeName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after, @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before, Pageable pageable);
 
     Page<Change> findByOntologyNameAndChangeNameAndChangeDate(@Param("ontologyName") String ontologyName, @Param("changeName") String changeName, @Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,  Pageable pageable);
