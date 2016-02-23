@@ -11,6 +11,7 @@
     <modules>
         <module>ontology-converter</module>
         <module>diachron-model</module>
+        <module>ontology-changes-api</module>
     </modules>
 
     <properties>
