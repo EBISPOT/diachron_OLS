@@ -24,11 +24,13 @@ public class OLSCrawler {
     private PropertiesManager propertiesManager;
     private Properties properties;
     private String olsApi;
+    private String storeArguments;
 
     public OLSCrawler() {
         this.propertiesManager = PropertiesManager.getPropertiesManager();
         this.properties = propertiesManager.getProperties();
         this.olsApi = this.properties.getProperty("OLS_API");
+        this.storeArguments = this.properties.getProperty("Store_Argumets");
     }
 
     public boolean crawl() {
@@ -67,7 +69,7 @@ public class OLSCrawler {
                 }
             }
 
-            FileOutputStream outputStream = new FileOutputStream(new File("OntologyList.txt"));
+            FileOutputStream outputStream = new FileOutputStream(new File(this.storeArguments + "OntologyList.txt"));
 
                     for (JsonNode ontology : ontologies)  {
                         if (ontology.get("status").getTextValue().equals("LOADED")) {

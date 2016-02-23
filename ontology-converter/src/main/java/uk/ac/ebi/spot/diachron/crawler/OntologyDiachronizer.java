@@ -36,6 +36,7 @@ public class OntologyDiachronizer {
     private PropertiesManager propertiesManager;
     private Properties properties;
     private String olsApi;
+    private String storeChangesArguments;
     private static String onologyName;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -54,7 +55,7 @@ public class OntologyDiachronizer {
         this.definedComplexChanges = properties.getProperty("Complex_Changes");
 
         this.olsApi = properties.getProperty("OLS_API");
-
+        this.storeChangesArguments = properties.getProperty("Store_Argumets");
         this.changeToPropertyMap = new HashMap<>();// add to the map as the properties are created
     }
 
@@ -165,7 +166,7 @@ public class OntologyDiachronizer {
                         Utils utils = new Utils();
 
                         this.newDatasetUri = datasetUri + namespace;
-                        DiachronRunner runner = new DiachronRunner(this.newDatasetUri);
+                        DiachronRunner runner = new DiachronRunner(this.newDatasetUri, this.storeChangesArguments);
 
                         ComplexChangesManager complexChangesManager = new ComplexChangesManager(this.newDatasetUri, this.changeDetector);
                         String[] complexChanges = definedComplexChanges.split(",");

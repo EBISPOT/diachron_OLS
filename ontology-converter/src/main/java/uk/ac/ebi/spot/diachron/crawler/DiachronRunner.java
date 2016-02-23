@@ -20,9 +20,11 @@ public class DiachronRunner {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private String newDatasetUri;
+    private String storeChangesArguments;
 
-    public DiachronRunner(String newDatasetUri) {
+    public DiachronRunner(String newDatasetUri, String storeChangesArguments) {
         this.newDatasetUri = newDatasetUri;
+        this.storeChangesArguments = storeChangesArguments;
     }
 
 
@@ -124,11 +126,12 @@ public class DiachronRunner {
                     try {
                         archiveService.runChangeDetection(recordSetId, oldRecordSetId, this.newDatasetUri);
                         //Store changes in a file for StoreChanges to use when called
-                        FileOutputStream outputStr = new FileOutputStream(new File("ChangesArguments.txt"), true) ;
+                        FileOutputStream outputStr = new FileOutputStream(new File(this.storeChangesArguments + "ChangesArguments.txt"), true) ;
                         String out = "-n " + ontologyName.toLowerCase() + " -cs " + this.newDatasetUri + " -ov " + oldRecordSetId + " -nv " + recordSetId + " -v " + version;
                         outputStr.write(out.getBytes());
                         outputStr.write("\n".getBytes());
                         outputStr.close();
+                        log.info("Wrote change arguments into ChangesArguments.txt file");
                     } catch (RuntimeException | DiachronException e){
                         log.info("Change Detection Fail");
                     }
