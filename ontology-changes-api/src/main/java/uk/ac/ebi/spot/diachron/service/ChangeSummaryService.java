@@ -64,7 +64,7 @@ public class ChangeSummaryService {
                         match(Criteria.where("ontologyName").is(ontologyName).and("changeDate").gte(afterDate)),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
                         project("changeDate", "changeName", "ontologyName", "version", "count"),
-                        sort(Sort.Direction.DESC, "changeDate")
+                        sort(Sort.Direction.ASC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
@@ -80,7 +80,7 @@ public class ChangeSummaryService {
                         match(Criteria.where("ontologyName").is(ontologyName).and("changeDate").lte(beforeDate)),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
                         project("changeDate", "changeName", "ontologyName", "version", "count"),
-                        sort(Sort.Direction.DESC, "changeDate")
+                        sort(Sort.Direction.ASC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
@@ -98,7 +98,7 @@ public class ChangeSummaryService {
                                         Criteria.where("changeDate").lte(beforeDate),Criteria.where("changeDate").gte(afterDate))),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
                         project("changeDate", "changeName", "ontologyName", "version", "count"),
-                        sort(Sort.Direction.DESC, "changeDate")
+                        sort(Sort.Direction.ASC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
@@ -117,7 +117,7 @@ public class ChangeSummaryService {
                                         Criteria.where("changeDate").lte(beforeDate),Criteria.where("changeDate").gte(afterDate))),
                         group("changeDate", "changeName", "ontologyName", "version").count().as("count"),
                         project("changeDate", "changeName", "ontologyName", "version", "count"),
-                        sort(Sort.Direction.DESC, "changeDate")
+                        sort(Sort.Direction.ASC, "changeDate")
                 );
 
         //Convert the aggregation result into a List
