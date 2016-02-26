@@ -10,7 +10,11 @@ import uk.ac.ebi.spot.diachron.utils.Utils;
 import java.io.*;
 import java.net.SocketException;
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by olgavrou on 06/11/2015.
@@ -126,8 +130,12 @@ public class DiachronRunner {
                     try {
                         archiveService.runChangeDetection(recordSetId, oldRecordSetId, this.newDatasetUri);
                         //Store changes in a file for StoreChanges to use when called
-                        FileOutputStream outputStr = new FileOutputStream(new File(this.storeChangesArguments + "ChangesArguments.txt"), true) ;
-                        String out = "-n " + ontologyName.toLowerCase() + " -cs " + this.newDatasetUri + " -ov " + oldRecordSetId + " -nv " + recordSetId + " -v " + version;
+                        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+                        Date date = Calendar.getInstance().getTime();
+                        String dateString = df.format(date).toString();
+
+                        FileOutputStream outputStr = new FileOutputStream(new File(this.storeChangesArguments + "/ChangesArguments.txt"), true) ;
+                        String out = "-n " + ontologyName.toLowerCase() + " -cs " + this.newDatasetUri + " -ov " + oldRecordSetId + " -nv " + recordSetId + " -v " + version + " -d " + dateString;
                         outputStr.write(out.getBytes());
                         outputStr.write("\n".getBytes());
                         outputStr.close();

@@ -11,5 +11,5 @@ done
 classpath="$base/config$jars";
 
 
-$JAVA_HOME/bin/java -classpath $classpath uk.ac.ebi.spot.diachron.storechanges.StoreChangesStandAlone $@ 2>&1;
+$JAVA_HOME/bin/java -classpath $classpath -Ddiachron.config.location=$diachronConfigLocation uk.ac.ebi.spot.diachron.storechanges.StoreChangesStandAlone $@ 2>&1;
 exit $?;

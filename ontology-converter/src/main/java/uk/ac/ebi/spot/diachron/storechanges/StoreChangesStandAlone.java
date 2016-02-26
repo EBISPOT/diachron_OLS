@@ -15,7 +15,7 @@ public class StoreChangesStandAlone {
     private static String oldVersion;
     private static String newVersion;
     private static String version;
-    //private static String date;
+    private static String date;
 
     private static int parseArguments(String[] args) throws IOException {
 
@@ -37,7 +37,7 @@ public class StoreChangesStandAlone {
                 oldVersion = cl.getOptionValue("ov");
                 newVersion = cl.getOptionValue("nv");
                 version = cl.getOptionValue("v");
-               // date = cl.getOptionValue("d");
+                date = cl.getOptionValue("d");
             }
 
         } catch (ParseException e) {
@@ -90,13 +90,13 @@ public class StoreChangesStandAlone {
         version.setRequired(true);
         options.addOption(version);
 
-/*        Option date = new Option(
+        Option date = new Option(
                 "d",
                 "date",
                 true,
                 "date e.g. 2016.01.01");
         date.setRequired(true);
-        options.addOption(date);*/
+        options.addOption(date);
 
         return options;
     }
@@ -110,7 +110,7 @@ public class StoreChangesStandAlone {
 
             if (statusCode == 0) {
 
-                    StoreChanges storeChanges = new StoreChanges(onologyName,changesSchema,oldVersion,newVersion,version);
+                    StoreChanges storeChanges = new StoreChanges(onologyName, changesSchema, oldVersion, newVersion, version, date);
                     try {
                         String changes = storeChanges.getChanges();
                         if(changes != null){

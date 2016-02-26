@@ -34,7 +34,7 @@ public class StoreChanges {
 
 
     //TODO: remove date from here
-    public StoreChanges(String ontologyName, String datasetUri, String oldVersion, String newVersion, String ontologyVersion) throws UnknownHostException {
+    public StoreChanges(String ontologyName, String datasetUri, String oldVersion, String newVersion, String ontologyVersion, String dateString) throws UnknownHostException {
         PropertiesManager propertiesManager = PropertiesManager.getPropertiesManager();
         Properties properties = propertiesManager.getProperties();
         String mongoHostIP = (String) properties.get("MongoHost_IP");
@@ -46,10 +46,6 @@ public class StoreChanges {
         this.oldVersion = oldVersion;
         this.newVersion = newVersion;
         this.ontologyVersion = ontologyVersion;
-
-        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-        Date date = Calendar.getInstance().getTime();
-        String dateString = df.format(date).toString();
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(0);
@@ -76,7 +72,7 @@ public class StoreChanges {
             String json = gson.toJson(changeSet);
             return json;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
         } finally {
             if (changes != null){
                 changes.terminate();
@@ -286,7 +282,7 @@ public class StoreChanges {
     public static void main(String args[]){
         StoreChanges storeChanges = null;
         try {
-            storeChanges = new StoreChanges("efo","http://www.diachron-fp7.eu/efo","http://www.diachron-fp7.eu/resource/recordset/EFO/1450375796150/3F72F2CCB735199E04A627D5AB935296","http://www.diachron-fp7.eu/resource/recordset/EFO/1453310228798/800040A7DD228D68C2BF3CEE9F8EA0CC","2.68");
+            storeChanges = new StoreChanges("efo","http://www.diachron-fp7.eu/efo","http://www.diachron-fp7.eu/resource/recordset/EFO/1450375796150/3F72F2CCB735199E04A627D5AB935296","http://www.diachron-fp7.eu/resource/recordset/EFO/1453310228798/800040A7DD228D68C2BF3CEE9F8EA0CC","2.68", "2016.01.01");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

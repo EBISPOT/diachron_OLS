@@ -65,8 +65,8 @@ public class GetChanges {
         if (oldVersion != null && newVersion != null) {
             String changesOntology = fetchChangesOntology(oldVersion, newVersion);
             if (changesOntology == null) {
-                changesOntology = customCompareVersions(oldVersion, newVersion, true);
-                customOnt = true;
+                //don't run change detection again if no changes where found
+                throw new NullPointerException();
             }
             chOntologies.add(changesOntology);
         } else {

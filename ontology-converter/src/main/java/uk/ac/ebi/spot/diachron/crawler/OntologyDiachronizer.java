@@ -153,6 +153,8 @@ public class OntologyDiachronizer {
                             filter.add(URI.create("http://www.geneontology.org/formats/oboInOwl#consider"));
                             filter.add(URI.create("http://www.geneontology.org/formats/oboInOwl#replacedBy"));
                             obsolesenceProperty.add("http://www.w3.org/2002/07/owl#deprecated");
+                            obsolesenceProperty.add("http://www.geneontology.org/formats/oboInOwl#consider");
+                            obsolesenceProperty.add("http://www.geneontology.org/formats/oboInOwl#replacedBy");
                         }
                         changeToPropertyMap.put("Mark as Obsolete", obsolesenceProperty);
 
@@ -165,7 +167,7 @@ public class OntologyDiachronizer {
 
                         Utils utils = new Utils();
 
-                        this.newDatasetUri = datasetUri + namespace;
+                        this.newDatasetUri = datasetUri + "/" + namespace;
                         DiachronRunner runner = new DiachronRunner(this.newDatasetUri, this.storeChangesArguments);
 
                         ComplexChangesManager complexChangesManager = new ComplexChangesManager(this.newDatasetUri, this.changeDetector);

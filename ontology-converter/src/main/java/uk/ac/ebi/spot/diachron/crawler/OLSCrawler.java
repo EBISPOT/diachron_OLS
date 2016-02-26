@@ -69,7 +69,7 @@ public class OLSCrawler {
                 }
             }
 
-            FileOutputStream outputStream = new FileOutputStream(new File(this.storeArguments + "OntologyList.txt"));
+            FileOutputStream outputStream = new FileOutputStream(new File(this.storeArguments + "/OntologyList.txt"));
 
                     for (JsonNode ontology : ontologies)  {
                         if (ontology.get("status").getTextValue().equals("LOADED")) {
