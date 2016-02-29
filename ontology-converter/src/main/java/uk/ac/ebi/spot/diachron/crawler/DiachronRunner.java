@@ -58,7 +58,7 @@ public class DiachronRunner {
         try {
             File original = new File(outputDir, ontologyName + "-" + version + ".owl");
             File output = new File(outputDir, ontologyName + "-diachronic-" + version + ".owl");
-            //if(!original.exists()) {
+            if(!original.exists()) {
                 FileOutputStream fos = new FileOutputStream(original);
                 try {
                     int read = 0;
@@ -80,7 +80,7 @@ public class DiachronRunner {
                     }
                 }
 
-            //}///else {
+            }///else {
             //    if (stream != null){
             //        stream.close();
             //    }
@@ -140,6 +140,8 @@ public class DiachronRunner {
                         outputStr.write("\n".getBytes());
                         outputStr.close();
                         log.info("Wrote change arguments into ChangesArguments.txt file");
+                        // change detection successful
+                        utils.writeInFile(this.storeChangesArguments + "/Report.txt", "CHANGE DETECTION for ontology: " + ontologyName + " Old Version: " + oldRecordSetId + " New Version: " + recordSetId + " Version: " + version + " Date: " + dateString);
                     } catch (RuntimeException | DiachronException e){
                         log.info("Change Detection Fail");
                     }
@@ -164,6 +166,10 @@ public class DiachronRunner {
                     }*/
 
                     //-------------------------------------------------------------------
+                } else {
+                    //oldRecordSetId is null, so, first archive
+                    //if got to here, no error was thrown so archive was most probably successful
+                    utils.writeInFile(this.storeChangesArguments + "/Report.txt", "FIRST ARCHIVE of ontology: " + ontologyName);
                 }
             }
         } catch (IOException | DiachronException e) {

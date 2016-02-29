@@ -5,6 +5,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
@@ -159,6 +161,18 @@ public class Utils {
             log.info("Latest " + wantedInfo + " for this dataset: " + datasetID + " was not found");
             log.info(e.toString());
             return null;
+        }
+    }
+
+    public void writeInFile(String filePath, String message){
+        FileOutputStream outputStr = null;
+        try {
+            outputStr = new FileOutputStream(new File(filePath), true);
+            outputStr.write(message.getBytes());
+            outputStr.write("\n".getBytes());
+            outputStr.close();
+        } catch (IOException e) {
+            log.info(e.toString());
         }
     }
 }

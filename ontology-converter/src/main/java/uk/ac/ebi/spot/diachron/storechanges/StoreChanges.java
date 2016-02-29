@@ -9,12 +9,10 @@ import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import uk.ac.ebi.spot.diachron.utils.PropertiesManager;
+import uk.ac.ebi.spot.diachron.utils.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -31,6 +29,7 @@ public class StoreChanges {
     private MongoClient mongoClient;
     private String databaseName;
     private String collectionName;
+    private String storeArgumentsPath;
 
 
     //TODO: remove date from here
@@ -41,6 +40,7 @@ public class StoreChanges {
         String mongoPort = (String) properties.get("Mongo_Port");
         this.databaseName = (String) properties.get("Diachron_DB");
         this.collectionName = (String) properties.get("Diachron_Collection");
+        this.storeArgumentsPath = (String) properties.get("Store_Argumets");
         this.ontologyName = ontologyName;
         this.datasetUri = datasetUri;
         this.oldVersion = oldVersion;
@@ -72,7 +72,14 @@ public class StoreChanges {
             String json = gson.toJson(changeSet);
             return json;
         } catch (Exception e) {
-            System.out.println(e.toString());
+            String ex = e.toString();
+            System.out.println(ex);
+            if (ex.contains("Connection refused") || ex.contains("Connection failed") || ex.contains("VirtuosoException")){
+                Utils utils = new Utils();
+                utils.writeInFile(this.storeArgumentsPath + "/Report.txt", "VIRTUOSO SERVER IS DOWN, need to restart and then execute StoreAllChanges.sh. \n IMPORTANT: If any changes have been already loaded, delete them from mongodb first and then run StoreAllChanges.sh");
+                //exit with status 1 so the server unavailability is reported
+                System.exit(1);
+            }
         } finally {
             if (changes != null){
                 changes.terminate();
@@ -260,6 +267,8 @@ public class StoreChanges {
                     }
                 }
             }
+            Utils utils = new Utils();
+            utils.writeInFile(this.storeArgumentsPath + "/Report.txt", "Stored Changes into mongodb. ONTOLOGY: " + ontologyName + " DATE: " + date);
          }
     }
 
