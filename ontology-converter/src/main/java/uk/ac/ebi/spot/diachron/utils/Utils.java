@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.diachron.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -175,4 +176,29 @@ public class Utils {
             log.info(e.toString());
         }
     }
+
+    public String fixReturnedJson(String jsonResponse, String problematicField){
+        String [] hold = jsonResponse.split(",");
+        ArrayList<String> simpleChanges = new ArrayList();
+        for (String s : hold){
+            if (s.contains(problematicField)){
+                simpleChanges.add(s);
+            }
+        }
+        HashMap<String, String> stringMap = new HashMap<>();
+        for (String sc : simpleChanges){
+            int count = StringUtils.countMatches(sc, "\"");
+            if (count == 2){ // json is returning wrong response, the field returned is not enclosed in quotes (bug in virtuoso server)
+                String parts [] = sc.split(":");
+                String newString = parts[0] + ":\"" + parts[1] + "\"";
+                stringMap.put(sc,newString);
+            }
+        }
+
+        for (String key : stringMap.keySet()){
+            jsonResponse = jsonResponse.replace(key, stringMap.get(key));
+        }
+        return jsonResponse;
+    }
+
 }

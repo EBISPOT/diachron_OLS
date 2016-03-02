@@ -15,11 +15,9 @@ import java.util.HashMap;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.ac.ebi.spot.diachron.changes.ComplexChange;
-import uk.ac.ebi.spot.diachron.changes.ComplexChangeJson;
-import uk.ac.ebi.spot.diachron.changes.SimpleChange;
 import uk.ac.ebi.spot.diachron.utils.DiachronException;
 import uk.ac.ebi.spot.diachron.utils.HttpRequestHandler;
+import uk.ac.ebi.spot.diachron.utils.Utils;
 
 /**
  * Created by olgavrou on 30/11/2015.
@@ -207,54 +205,39 @@ public class ComplexChangesManager {
                     if (properties != null) {
                         SimpleChange sc = new SimpleChange();
                         for (String property : properties) {
-                            propertyId++;
-                            sc.setIs_Optional(false);
-                            sc.setSimple_Change("ADD_PROPERTY_INSTANCE");
-                            sc.setProperty(property);
-                            sc.setSubjectName("obs_class");
-                            sc.setSubjectParameter(":-subject");
-                            sc.setSetSubjectParameter(true);
-                            sc.setSelection_Filter(":-property");
-                            sc.setSimpleChangeId(propertyId);
-                            scList.add(sc);
+                            if(property.contains("http://www.w3.org/2002/07/owl#deprecated")) {
+                                propertyId++;
+                                sc.setIs_Optional(false);
+                                sc.setSimple_Change("ADD_PROPERTY_INSTANCE");
+                                sc.setProperty(property);
+                                sc.setSubjectName("obs_class");
+                                sc.setSubjectParameter(":-subject");
+                                sc.setSetSubjectParameter(true);
+                                sc.setSelection_Filter(":-property");
+
+                                sc.setSimpleChangeId(propertyId);
+                                scList.add(sc);
+                            } else {
+                                propertyId++;
+                                SimpleChange sc1 = new SimpleChange();
+                                sc1.setIs_Optional(true);
+                                sc1.setSimple_Change("ADD_PROPERTY_INSTANCE");
+                                sc1.setProperty(property);
+                                sc1.setSelection_Filter(":-property");
+                                sc1.setSubjectName("subject");
+                                sc1.setSubjectParameter(":-subject");
+                                sc1.setSetSubjectParameter(false);
+                                sc1.setObjectName(property.split("#")[1]); // split the predicate at the # and keep the name (i.e. consider or replaceBy)
+                                sc1.setObjectParameter(":-object");
+                                sc1.setSetObjectParameter(true);
+                                sc1.setSimpleChangeId(propertyId);
+                                joinFilter.clear();
+                                joinFilter.add(sc);
+                                joinFilter.add(sc1);
+                                sc1.setJoin_Filter(joinFilter);
+                                scList.add(sc1);
+                            }
                         }
-
-                        propertyId++;
-                        SimpleChange sc1 = new SimpleChange();
-                        sc1.setIs_Optional(true);
-                        sc1.setSimple_Change("ADD_PROPERTY_INSTANCE");
-                        sc1.setProperty("http://www.geneontology.org/formats/oboInOwl#consider");
-                        sc1.setSelection_Filter(":-property");
-                        sc1.setSubjectName("subject");
-                        sc1.setSubjectParameter(":-subject");
-                        sc1.setSetSubjectParameter(false);
-                        sc1.setObjectName("consider");
-                        sc1.setObjectParameter(":-object");
-                        sc1.setSetObjectParameter(true);
-                        sc1.setSimpleChangeId(propertyId);
-                        joinFilter.add(sc);
-                        joinFilter.add(sc1);
-                        sc1.setJoin_Filter(joinFilter);
-                        scList.add(sc1);
-
-                        joinFilter.clear();
-                        propertyId++;
-                        SimpleChange sc2 = new SimpleChange();
-                        sc2.setIs_Optional(true);
-                        sc2.setSimple_Change("ADD_PROPERTY_INSTANCE");
-                        sc2.setProperty("http://www.geneontology.org/formats/oboInOwl#replacedBy");
-                        sc2.setSelection_Filter(":-property");
-                        sc2.setSubjectName("subject");
-                        sc2.setSubjectParameter(":-subject");
-                        sc2.setSetSubjectParameter(false);
-                        sc2.setObjectName("replaceBy");
-                        sc2.setObjectParameter(":-object");
-                        sc2.setSetObjectParameter(true);
-                        sc2.setSimpleChangeId(propertyId);
-                        joinFilter.add(sc);
-                        joinFilter.add(sc2);
-                        sc2.setJoin_Filter(joinFilter);
-                        scList.add(sc2);
                     }
                 }
                 break;
@@ -604,7 +587,9 @@ public class ComplexChangesManager {
           //  String jsonResponse = httpRequest.executeHttpGet(this.integrationLayer + "/webresources/complex_change/", map);
              String jsonResponse = httpRequest.executeHttpGet(this.changeDetector + "/diachron/complex_change/", map);
 
-            JSONParser parser = new JSONParser();
+            Utils utils = new Utils();
+            jsonResponse = utils.fixReturnedJson(jsonResponse, "Simple_Change");
+                JSONParser parser = new JSONParser();
                 org.json.simple.JSONObject response = (org.json.simple.JSONObject) parser.parse(jsonResponse);
                 Object answer = response.get("Message");
                 if (answer instanceof java.lang.String) {
