@@ -44,7 +44,7 @@ In order to use the OLS crawler you need to:
   * **ChangeDetector** should point to the Change Detection service that you have configured in your Apache Tomcat server
   * **OutputFolder** should point to a folder where the ontology versions and their "diachronized" formats will be downloaded and stored
   * **Repository_** properties should point to your Virtuoso server properties
-3. edit the "diachron_ontologies.sh", "diachron_ontology.sh" and "store_changes.sh" scripts under /ontology-converter/src/main/bin/ so that the $JAVA_HOME path points to your java home directory
+3. edit the "diachron_ontologies.sh", "diachron_ontology.sh" and "store_changes.sh" scripts under /ontology-converter/src/main/bin/ so that the $JAVA_HOME path points to your java home directory. Remove the "-Ddiachron.config.location=$diachronConfigLocation" parameter from the scripts, or if you change the location of the config.properties file, then replace the $diachronConfigLocation to point to the file with its full path
 4. build the application using "mvn clean package"
 5. in the target folder you should see the diachron.zip and a diachron.tar.gz files. Decompress the one you want. In the bin file that appears after the decompression you just need to run the Runner.sh script for the OLS crawler to run. 
 
@@ -67,6 +67,7 @@ An example of the format of a change in mongodb can be seen below.
 
 { "_id" : ObjectId("<objid>"), "changeDate" : ISODate("2015-02-03T00:00:00Z"), "ontologyName" : "edam", "changeName" : "Add Synonym", "changeSubjectUri" : "http://edamontology.org/topic_3374", "changeProperties" : { "synonym" : [ "Drug delivery" ], "predicate1" : [ "synonym" ] } }
 
+If you want to use the **ontology-changes-api** to retrieve the stored changes in a programmatic way, then you can set it up to point to your mongodb.
 
 ### Useful info
 
