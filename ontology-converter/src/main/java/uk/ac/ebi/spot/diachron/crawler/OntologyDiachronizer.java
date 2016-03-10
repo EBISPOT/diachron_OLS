@@ -143,7 +143,9 @@ public class OntologyDiachronizer {
                         classProperties.addAll(synonymProperties);
 
 
-                        filter.add(URI.create(labelProperty.get(0))); // TODO: refactor
+                        for (String label : labelProperty){
+                            filter.add(URI.create(label));
+                        }
                         if (preferredPrefix.contains("EFO")) {
                             filter.add(URI.create("http://www.ebi.ac.uk/efo/reason_for_obsolescence"));
                             obsolesenceProperty.add("http://www.ebi.ac.uk/efo/reason_for_obsolescence");
@@ -185,6 +187,9 @@ public class OntologyDiachronizer {
                                 } catch (IOException | DiachronException e) {
                                     log.info("Error while creating the complex change scheme of: " + preferredPrefix);
                                     log.info(e.toString());
+                                    utils.writeInFile(this.storeChangesArguments + "/Report.txt", "System exit 1 for ontology: " + namespace.toUpperCase() + " EXCEPTION: " + e.toString());
+                                    //System exit
+                                    System.exit(1);
                                 }
                             }
                             runner.convertArchiveAndChangeDetection(preferredPrefix, fileLocation, version, null, new File(this.output), filter, this.integrationLayer, this.archiver, this.changeDetector);
@@ -210,6 +215,9 @@ public class OntologyDiachronizer {
                                     } catch (IOException | DiachronException e) {
                                         log.info("Error while updating the complex change scheme of: " + preferredPrefix);
                                         log.info(e.toString());
+                                        utils.writeInFile(this.storeChangesArguments + "/Report.txt", "System exit 1 for ontology: " + namespace.toUpperCase() + " EXCEPTION: " + e.toString());
+                                        //System exit
+                                        System.exit(1);
                                     }
                                 }
                                 log.info("Archiving without defining complex changes test.");
@@ -219,9 +227,9 @@ public class OntologyDiachronizer {
                                 if (!latestVersion.equals(version)) {
                                     log.info("unequal versions " + version + " " + latestVersion);
                                     for (String complexChange : complexChanges) {
-                                        ArrayList selectionFilters = complexChangesManager.getSelectionFilters(complexChange);
+                                        ArrayList selectionFilters = null;
+                                        selectionFilters = complexChangesManager.getSelectionFilters(complexChange);
                                         try {
-
                                             if (selectionFilters == null) {
                                                 complexChangesManager.manageComplexChange(complexChange, false, definitionProperties, synonymProperties, obsolesenceProperty, labelProperty, newDatasetUri);
                                             } else if (!utils.areEqual(selectionFilters, changeToPropertyMap.get(complexChange))) {// if it finds one of the properties, it is fine. If it finds none then the property needs updating
@@ -230,6 +238,9 @@ public class OntologyDiachronizer {
                                         } catch (IOException | DiachronException e) {
                                             log.info("Error while updating the complex change scheme of: " + preferredPrefix);
                                             log.info(e.toString());
+                                            //System exit
+                                            utils.writeInFile(this.storeChangesArguments + "/Report.txt", "System exit 1 for ontology: " + namespace.toUpperCase() + " EXCEPTION: " + e.toString());
+                                            System.exit(1);
                                         }
                                     }
                                     // Archive and run change detection between the two versions
@@ -241,6 +252,8 @@ public class OntologyDiachronizer {
               //  }
             //}
         } catch (RuntimeException | IOException | URISyntaxException e){
+            Utils utils = new Utils();
+            utils.writeInFile(this.storeChangesArguments + "/Report.txt", e.toString());
             e.printStackTrace();
         }
         }

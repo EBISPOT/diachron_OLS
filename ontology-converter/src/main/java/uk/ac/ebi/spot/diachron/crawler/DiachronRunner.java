@@ -144,6 +144,7 @@ public class DiachronRunner {
                         utils.writeInFile(this.storeChangesArguments + "/Report.txt", "CHANGE DETECTION for ontology: " + ontologyName + " Old Version: " + oldRecordSetId + " New Version: " + recordSetId + " Version: " + version + " Date: " + dateString);
                     } catch (RuntimeException | DiachronException e){
                         log.info("Change Detection Fail");
+                        utils.writeInFile(this.storeChangesArguments + "/Report.txt", "Change Detection FAIL: " + ontologyName);
                     }
 
 
@@ -175,6 +176,8 @@ public class DiachronRunner {
         } catch (IOException | DiachronException e) {
             log.info("ERROR: Could not convert and archive: " + ontologyName);
             log.info(e.toString());
+            Utils utils = new Utils();
+            utils.writeInFile(this.storeChangesArguments + "/Report.txt", "FAIL: Could not convert and archive: " + ontologyName);
             return;
         }
     }

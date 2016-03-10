@@ -628,8 +628,8 @@ public class ComplexChangesManager {
 
                 }
         } catch (IOException | URISyntaxException | ParseException | RuntimeException e) {
-            //e.printStackTrace();
-            return null;
+            log.info(e.toString());
+            throw new RuntimeException("Selection Filters could not be gathered. EXCEPTION: " + e.toString());
         }
     }
 }
