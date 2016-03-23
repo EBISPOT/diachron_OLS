@@ -119,6 +119,7 @@ public class StoreChanges {
                 prediacte.clear();
                 subject.clear();
                 subjectValue.clear();
+                boolean hasUnboundedValue = false;
                 JsonNode change = elements.next();
                 if (change.get("changeName") != null) {
                     changeName = change.get("changeName").getTextValue();
@@ -187,6 +188,8 @@ public class StoreChanges {
                                         }
                                         subject = prediacte;
                                     }
+                                } else {
+                                    hasUnboundedValue = true;
                                 }
                             }
                         }
@@ -198,7 +201,7 @@ public class StoreChanges {
                     continue;
                 }
 
-                if (!prediacte.isEmpty() && !subject.isEmpty()) {
+                if (!prediacte.isEmpty() && !subject.isEmpty() && !hasUnboundedValue) {
 
                     Map<String, Collection<String>> propep = new HashMap<>();
                     for (int i = 0; i < prediacte.size(); i++) {
@@ -216,7 +219,7 @@ public class StoreChanges {
                                     .append("changeSubjectUri", changeSubjectUri)
                                     .append("changeProperties", propep)
                     );
-                } else {
+                } else if (!hasUnboundedValue){
                     collection.insertOne(
                             new Document()
                                     .append("changeDate", date)
@@ -291,7 +294,7 @@ public class StoreChanges {
     public static void main(String args[]){
         StoreChanges storeChanges = null;
         try {
-            storeChanges = new StoreChanges("efo","http://www.diachron-fp7.eu/efo","http://www.diachron-fp7.eu/resource/recordset/EFO/1450375796150/3F72F2CCB735199E04A627D5AB935296","http://www.diachron-fp7.eu/resource/recordset/EFO/1453310228798/800040A7DD228D68C2BF3CEE9F8EA0CC","2.68", "2016.01.01");
+            storeChanges = new StoreChanges("enm","http://www.diachron-fp7.eu/enm","http://www.diachron-fp7.eu/resource/recordset/ENM/1454586981152/65E2894B729E92F955E8FEBBB2CD55A4","http://www.diachron-fp7.eu/resource/recordset/ENM/1456917272047/D29A5A076838B070D611F78FE4472CD8","3.0", "2016.02.03");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
