@@ -70,6 +70,8 @@ public class DiachronRunner {
                 } catch (SocketException e ){
                     log.info("ERROR: Could not read: " + ontologyName);
                     log.info(e.toString());
+                    Utils utils = new Utils();
+                    utils.writeInFile(this.storeChangesArguments + "/Report.txt", "FAIL: Could not read: " + ontologyName);
                     return;
                 } finally {
                     if (fos != null){
@@ -103,6 +105,8 @@ public class DiachronRunner {
                 } catch (NullPointerException e ){
                     log.info("ERROR: Could not convert: " + ontologyName);
                     log.info(e.toString());
+                    Utils utils = new Utils();
+                    utils.writeInFile(this.storeChangesArguments + "/Report.txt", "FAIL: Could not convert: " + ontologyName);
                     return;
                 } finally {
                     if (inputStream != null){
