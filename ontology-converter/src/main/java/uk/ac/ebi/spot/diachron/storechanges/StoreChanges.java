@@ -47,7 +47,7 @@ public class StoreChanges {
         this.newVersion = newVersion;
         this.ontologyVersion = ontologyVersion;
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locale.UK);
         cal.setTimeInMillis(0);
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.SECOND, 0);
