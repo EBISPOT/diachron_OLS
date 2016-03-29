@@ -252,6 +252,8 @@ public class OntologyDiachronizer {
               //  }
             //}
         } catch (RuntimeException | IOException | URISyntaxException e){
+            Utils utils = new Utils();
+            utils.writeInFile(this.storeChangesArguments + "/Report.txt", "EXCEPTION: " + e.toString());
             e.printStackTrace();
         }
         }
