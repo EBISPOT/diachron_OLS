@@ -52,6 +52,9 @@ public class OLSCrawler {
             ArrayList<JsonNode> ontologies = new ArrayList<>();
            // ontologies.add(rootNode.get("_embedded").get("ontologies").getElements());
             JsonNode next = rootNode.get("_links").get("first");
+            if (next == null){
+                next = rootNode.get("_links").get("self");
+            }
             while (next != null) {
                 String nextPage = next.get("href").getTextValue();
                 try {
