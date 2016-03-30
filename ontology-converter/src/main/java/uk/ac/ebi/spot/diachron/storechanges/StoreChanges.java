@@ -9,7 +9,6 @@ import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.openrdf.query.algebra.evaluation.function.datetime.Timezone;
 import uk.ac.ebi.spot.diachron.utils.*;
 
 import java.io.IOException;
@@ -51,23 +50,16 @@ public class StoreChanges {
         this.ontologyVersion = ontologyVersion;
 
         try {
-            this.date = new SimpleDateFormat("yyyy.MM.dd", Locale.UK).parse(dateString);
+            this.date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss", Locale.UK).parse(dateString + ".02.00.00");
+
         } catch (ParseException e) {
             throw new RuntimeException("Unexpected date formatting problem", e);
         }
-//        Calendar cal = Calendar.getInstance();
-        //cal.setTimeInMillis(0);
-        //cal.set(Calendar.MILLISECOND, 0);
-        //cal.set(Calendar.SECOND, 0);
-        //cal.set(Calendar.MINUTE, 0);
-        //cal.set(Calendar.HOUR, 0);
-        //cal.set(Calendar.AM_PM, Calendar.AM);
-//        cal.set((int) Integer.parseInt(dateString.split("\\.")[0]), (int) Integer.parseInt(dateString.split("\\.")[1]) - 1 , (int) Integer.parseInt(dateString.split("\\.")[2]));
-//        this.date = cal.getTime();
-        int t = Integer.parseInt(mongoPort);
+
+        int port = Integer.parseInt(mongoPort);
 
         //initialize mongo client
-        this.mongoClient = new MongoClient(mongoHostIP, t);
+        this.mongoClient = new MongoClient(mongoHostIP, port);
     }
 
     public String getChanges(){
@@ -75,7 +67,7 @@ public class StoreChanges {
         try {
             changes = new GetChanges(datasetUri,true);
             //TODO: define limit
-            Set<DetChangeTest> changeSet = changes.fetchChangesBetweenVersions(oldVersion, newVersion, null, null, 10000000);
+            Set<DetChangeTest> changeSet = changes.fetchChangesBetweenVersions(oldVersion, newVersion, null, null, 10000000); //this 1000000 can be ignored / does nothing, used in the initial library that got overriden
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(changeSet);
             return json;
