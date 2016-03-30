@@ -9,10 +9,13 @@ import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.openrdf.query.algebra.evaluation.function.datetime.Timezone;
 import uk.ac.ebi.spot.diachron.utils.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -47,15 +50,20 @@ public class StoreChanges {
         this.newVersion = newVersion;
         this.ontologyVersion = ontologyVersion;
 
-        Calendar cal = Calendar.getInstance(Locale.UK);
-        cal.setTimeInMillis(0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.AM_PM, Calendar.AM);
-        cal.set((int) Integer.parseInt(dateString.split("\\.")[0]), (int) Integer.parseInt(dateString.split("\\.")[1]) - 1 , (int) Integer.parseInt(dateString.split("\\.")[2]));
-        this.date = cal.getTime();
+        try {
+            this.date = new SimpleDateFormat("yyyy.MM.dd", Locale.UK).parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException("Unexpected date formatting problem", e);
+        }
+//        Calendar cal = Calendar.getInstance();
+        //cal.setTimeInMillis(0);
+        //cal.set(Calendar.MILLISECOND, 0);
+        //cal.set(Calendar.SECOND, 0);
+        //cal.set(Calendar.MINUTE, 0);
+        //cal.set(Calendar.HOUR, 0);
+        //cal.set(Calendar.AM_PM, Calendar.AM);
+//        cal.set((int) Integer.parseInt(dateString.split("\\.")[0]), (int) Integer.parseInt(dateString.split("\\.")[1]) - 1 , (int) Integer.parseInt(dateString.split("\\.")[2]));
+//        this.date = cal.getTime();
         int t = Integer.parseInt(mongoPort);
 
         //initialize mongo client
