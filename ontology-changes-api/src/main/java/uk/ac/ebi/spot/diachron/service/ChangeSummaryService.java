@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.diachron.respository.ChangeRepository;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +59,22 @@ public class ChangeSummaryService {
 
     }
 
+    public List<ChangeSummary>findByOntologyNameAndChangeDate(@Param("ontologyName") String ontologyName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date date) {
+
+        Date before = getEndOfDayDate(date);
+        return findByOntologyNameAndChangeDateBetween(ontologyName, date, before);
+    }
+
+    public Date getEndOfDayDate (Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+
+        return calendar.getTime();
+    }
+
     public List<ChangeSummary>findByOntologyNameAndChangeDateAfter(@Param("ontologyName") String ontologyName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date afterDate) {
         Aggregation agg =
                 Aggregation.newAggregation(
@@ -75,6 +92,8 @@ public class ChangeSummaryService {
     }
 
     public List<ChangeSummary>findByOntologyNameAndChangeDateBefore(@Param("ontologyName") String ontologyName, @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date beforeDate) {
+
+        beforeDate = getEndOfDayDate(beforeDate);
         Aggregation agg =
                 Aggregation.newAggregation(
                         match(Criteria.where("ontologyName").is(ontologyName).and("changeDate").lte(beforeDate)),
@@ -91,6 +110,8 @@ public class ChangeSummaryService {
     }
 
     public List<ChangeSummary>findByOntologyNameAndChangeDateBetween(@Param("ontologyName") String ontologyName,@Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date afterDate,  @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date beforeDate) {
+        beforeDate = getEndOfDayDate(beforeDate);
+
         Aggregation agg =
                 Aggregation.newAggregation(
                         match(Criteria.where("ontologyName").is(ontologyName)
@@ -109,6 +130,8 @@ public class ChangeSummaryService {
     }
 
     public List<ChangeSummary>findByOntologyNameAndChangeNameAndChangeDateBetween(@Param("ontologyName") String ontologyName, @Param("changeName") String changeName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date afterDate,  @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date beforeDate) {
+        beforeDate = getEndOfDayDate(beforeDate);
+
         Aggregation agg =
                 Aggregation.newAggregation(
                         match(Criteria.where("ontologyName").is(ontologyName)

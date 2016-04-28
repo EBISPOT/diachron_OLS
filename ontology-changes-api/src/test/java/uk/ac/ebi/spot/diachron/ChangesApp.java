@@ -50,84 +50,76 @@ public class ChangesApp  implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
 //        changeSummaryRepository.deleteAll();
-        changeRepository.deleteAll();
+//        changeRepository.deleteAll();
 
+//
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTimeInMillis(0);
+//        cal.set(2015, 3, 15);
+//        Date date = cal.getTime(); // get back a Date object
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(0);
-        cal.set(2015, 3, 15);
-        Date date = cal.getTime(); // get back a Date object
-
-//        changeSummaryRepository.save(new ChangeSummary("Addlabel", date, "efo", "2.67", 12));
-//        changeSummaryRepository.save(new ChangeSummary("Addclass", date, "efo", "2.67", 23));
-//        changeSummaryRepository.save(new ChangeSummary("Addsynonym", date, "efo", "2.67", 31));
-//        changeSummaryRepository.save(new ChangeSummary("Adddefinition", date, "efo", "2.67", 3));
-//        changeSummaryRepository.save(new ChangeSummary("Deletelabel", date, "efo", "2.67", 18));
-//        changeSummaryRepository.save(new ChangeSummary("Deletesynonoym", date, "efo", "2.67", 35));
-//        changeSummaryRepository.save(new ChangeSummary("Deleteclass", date, "efo", "2.67", 42))    ;
-//        changeSummaryRepository.save(new ChangeSummary("Deletedefinition", date, "efo", "2.67", 75));
 
         Map<String, Collection<String>> propep = new HashMap<>();
         propep.put("predicate", Collections.singleton("label"));
         propep.put("label", Collections.singleton("new label 1"));
 
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add class", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
-
-        cal.setTimeInMillis(0);
-        cal.set(2015, 4, 15);
-        date = cal.getTime(); // get back a Date object
-
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
-
-        cal.setTimeInMillis(0);
-        cal.set(2015, 5, 15);
-        date = cal.getTime(); // get back a Date object
-
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
-        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add class", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
+//
+//        cal.setTimeInMillis(0);
+//        cal.set(2015, 4, 15);
+//        date = cal.getTime(); // get back a Date object
+//
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
+//
+//        cal.setTimeInMillis(0);
+//        cal.set(2015, 5, 15);
+//        date = cal.getTime(); // get back a Date object
+//
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add labelclass", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Add synonym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete label", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000001", propep));
+//        changeRepository.save(new Change(date, "efo", "Delete synonoym", "http://www.ebi.ac.uk/efo/EFO_00000002", propep));
 
 //
 //        changeSummaryRepository.save(new ChangeSummary("Add label", date, "efo", "2.67", 12));
@@ -138,14 +130,14 @@ public class ChangesApp  implements CommandLineRunner {
 //        changeSummaryRepository.save(new ChangeSummary("Delete synonoym", date, "efo", "2.67", 35));
 //        changeSummaryRepository.save(new ChangeSummary("Delete class", date, "efo", "2.67", 42))    ;
 //        changeSummaryRepository.save(new ChangeSummary("Delete definition", date, "efo", "2.67", 75));
-
-        System.out.println("Get changes before today");
-        System.out.println("--------------------");
-
-        for (ChangeSummary changeSummary : changeSummaryService.findByOntologyNameAndChangeDateBefore("efo", new Date())) {
-            System.out.println(changeSummary.toString());
-        }
-        System.out.println("");
+//
+//        System.out.println("Get changes before today");
+//        System.out.println("--------------------");
+//
+//        for (ChangeSummary changeSummary : changeSummaryService.findByOntologyNameAndChangeDateBefore("efo", new Date())) {
+//            System.out.println(changeSummary.toString());
+//        }
+//        System.out.println("");
 
     }
 }

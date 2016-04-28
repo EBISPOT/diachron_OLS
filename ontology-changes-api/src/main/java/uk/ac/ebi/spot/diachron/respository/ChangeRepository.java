@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,11 +37,7 @@ public interface ChangeRepository extends MongoRepository<Change, String> {
 
     Page<Change> findByOntologyNameAndChangeDateBetween(@Param("ontologyName") String ontologyName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after, @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before, Pageable pageable);
 
-    Page<Change> findByOntologyNameAndChangeDate(@Param("ontologyName") String ontologyName, @Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date, Pageable pageable);
-
     Page<Change> findByOntologyNameAndChangeNameAndChangeDateBetween(@Param("ontologyName") String ontologyName, @Param("changeName") String changeName, @Param("after") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date after, @Param("before") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date before, Pageable pageable);
-
-    Page<Change> findByOntologyNameAndChangeNameAndChangeDate(@Param("ontologyName") String ontologyName, @Param("changeName") String changeName, @Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,  Pageable pageable);
 
     Page<Change> findByOntologyNameAndChangeSubjectUri(@Param("ontologyName") String ontologyName,@Param("subject") String changeSubjectUri , Pageable pageable);
 

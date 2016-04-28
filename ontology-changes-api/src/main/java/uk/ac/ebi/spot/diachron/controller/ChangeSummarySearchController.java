@@ -50,6 +50,17 @@ public class ChangeSummarySearchController implements
 
     }
 
+    @RequestMapping(path = "/findByOntologyNameAndChangeDate", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    HttpEntity<List<ChangeSummary>> findByOntologyNameAndChangeDate(
+            @RequestParam("ontologyName") String ontologyName,
+            @RequestParam("date")  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date
+    ) throws ResourceNotFoundException {
+
+        List<ChangeSummary> summaries = changeSummaryService.findByOntologyNameAndChangeDate(ontologyName, date);
+        return new ResponseEntity<>( summaries , HttpStatus.OK);
+
+    }
+
     @RequestMapping(path = "/findByOntologyNameAndChangeDateAfter", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     HttpEntity<List<ChangeSummary>> findByOntologyNameAndChangeDateAfter(
             @RequestParam("ontologyName") String ontologyName,

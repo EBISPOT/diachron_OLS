@@ -1,0 +1,14 @@
+= DIACHORN In OLS (DinO)
+:doctype: book
+:toc: left
+:toc-title: DIACHORN In OLS (DinO)
+:sectanchors:
+:sectlinks:
+:toclevels: 4
+:source-highlighter: highlightjs
+
+[[overview]]
+= Overview
+
+DIACHORN In OLS (DinO) is an API to query changes changes between ontology releases. It is being used to track changes in ontologies in the EMBL-EBI Ontology Lookup Service.
+DinO was developed as part of the EU FP7 DIACHRON project.
