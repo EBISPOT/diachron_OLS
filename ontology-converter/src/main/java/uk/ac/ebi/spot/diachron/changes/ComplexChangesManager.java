@@ -59,10 +59,11 @@ public class ComplexChangesManager {
             case "Add Synonym":
                 priority = 6.0;
                 properties = synonymProperties;
-                propertyId = 0;
+                propertyId = 1;
+                int firstAS = 0;
                 if (properties != null) {
                     for (String property : properties) {
-                        propertyId++;
+                        //propertyId++;
                         SimpleChange sc = new SimpleChange();
                         if (properties.size() > 1) {
                             sc.setIs_Optional(true);
@@ -73,10 +74,15 @@ public class ComplexChangesManager {
                         sc.setProperty(property);
                         sc.setObjectName("synonym");
                         sc.setObjectParameter(":-object");
-                        sc.setSetObjectParameter(true);
+                        if(firstAS == 0) {
+                            sc.setSetObjectParameter(true);
+                        }
                         sc.setSubjectName("subject");
                         sc.setSubjectParameter(":-subject");
-                        sc.setSetSubjectParameter(true);
+                        if(firstAS == 0) { // skip setting the same parameter to complex changes if there are more than one properties
+                            sc.setSetSubjectParameter(true);
+                            firstAS++;
+                        }
                         sc.setSelection_Filter(":-property");
                         sc.setSimpleChangeId(propertyId);
                         scList.add(sc);
@@ -86,10 +92,11 @@ public class ComplexChangesManager {
             case "Add Definition":
                 priority = 7.0;
                 properties = definitionProperties;
-                propertyId = 0;
+                propertyId = 1;
+                int firstAD = 0;
                 if (properties != null) {
                     for (String property : properties) {
-                        propertyId++;
+                       // propertyId++;
                         SimpleChange sc = new SimpleChange();
                         if (properties.size() > 1) {
                             sc.setIs_Optional(true);
@@ -100,10 +107,15 @@ public class ComplexChangesManager {
                         sc.setProperty(property);
                         sc.setObjectName("definition");
                         sc.setObjectParameter(":-object");
-                        sc.setSetObjectParameter(true);
+                        if (firstAD == 0) {
+                            sc.setSetObjectParameter(true);
+                        }
                         sc.setSubjectName("subject");
                         sc.setSubjectParameter(":-subject");
-                        sc.setSetSubjectParameter(true);
+                        if (firstAD == 0) {
+                            sc.setSetSubjectParameter(true);
+                            firstAD++;
+                        }
                         sc.setSelection_Filter(":-property");
                         sc.setSimpleChangeId(propertyId);
                         scList.add(sc);
@@ -113,10 +125,11 @@ public class ComplexChangesManager {
             case "Delete Synonym":
                 priority = 8.0;
                 properties = synonymProperties;
-                propertyId = 0;
+                propertyId = 1;
+                int firstDS = 0;
                 if (properties != null) {
                     for (String property : properties) {
-                        propertyId++;
+                        //propertyId++;
                         SimpleChange sc = new SimpleChange();
                         if (properties.size() > 1) {
                             sc.setIs_Optional(true);
@@ -127,11 +140,15 @@ public class ComplexChangesManager {
                         sc.setProperty(property);
                         sc.setObjectName("synonym");
                         sc.setObjectParameter(":-object");
-                        sc.setSetObjectParameter(true);
-                        sc.setSetObjectParameter(true);
+                        if(firstDS == 0) {
+                            sc.setSetObjectParameter(true);
+                        }
                         sc.setSubjectName("subject");
                         sc.setSubjectParameter(":-subject");
-                        sc.setSetSubjectParameter(true);
+                        if(firstDS == 0) {
+                            sc.setSetSubjectParameter(true);
+                            firstDS++;
+                        }
                         sc.setSelection_Filter(":-property");
                         sc.setSimpleChangeId(propertyId);
                         scList.add(sc);
@@ -141,10 +158,11 @@ public class ComplexChangesManager {
             case "Delete Definition":
                 priority = 9.0;
                 properties = definitionProperties;
-                propertyId = 0;
+                propertyId = 1;
+                int firstDD = 0;
                 if (properties != null) {
                     for (String property : properties) {
-                        propertyId++;
+                        //propertyId++;
                         SimpleChange sc = new SimpleChange();
                         if (properties.size() > 1) {
                             sc.setIs_Optional(true);
@@ -155,10 +173,15 @@ public class ComplexChangesManager {
                         sc.setProperty(property);
                         sc.setObjectName("definition");
                         sc.setObjectParameter(":-object");
-                        sc.setSetObjectParameter(true);
+                        if (firstDD == 0) {
+                            sc.setSetObjectParameter(true);
+                        }
                         sc.setSubjectName("subject");
                         sc.setSubjectParameter(":-subject");
-                        sc.setSetSubjectParameter(true);
+                        if (firstDD == 0) {
+                            sc.setSetSubjectParameter(true);
+                            firstDD++;
+                        }
                         sc.setSelection_Filter(":-property");
                         sc.setSimpleChangeId(propertyId);
                         scList.add(sc);
@@ -244,10 +267,11 @@ public class ComplexChangesManager {
             case "ADD LABEL":
                 priority = 4.0;
                 properties = labelProperty;
-                propertyId = 0;
+                propertyId = 1;
+                int firstAL = 0;
                 if (properties != null) {
                     for (String property : properties) {
-                        propertyId++;
+                        //propertyId++;
                         SimpleChange sc = new SimpleChange();
                         if (properties.size() > 1) {
                             sc.setIs_Optional(true);
@@ -265,10 +289,16 @@ public class ComplexChangesManager {
                             sc.setObjectName("label");
                             sc.setObjectParameter(":-object");
                         }
-                        sc.setSetObjectParameter(true);
+                        if (firstAL == 0) {
+                            sc.setSetObjectParameter(true);
+                        }
                         sc.setSubjectName("subject");
                         sc.setSubjectParameter(":-subject");
-                        sc.setSetSubjectParameter(true);
+                        if (firstAL == 0) {
+                            sc.setSetSubjectParameter(true);
+                            if (!property.contains("http://www.w3.org/2000/01/rdf-schema#label")) { // if it is the classic label, and there is another label to detect, then we want to add the properties to the complex changes
+                                firstAL++;
+                            }                        }
                         sc.setSimpleChangeId(propertyId);
                         scList.add(sc);
                     }
@@ -277,10 +307,11 @@ public class ComplexChangesManager {
             case "DELETE LABEL":
                 priority = 5.0;
                 properties = labelProperty;
-                propertyId = 0;
+                propertyId = 1;
+                int firstDL = 0;
                 if (properties != null) {
                     for (String property : properties) {
-                        propertyId++;
+                       // propertyId++;
                         SimpleChange sc = new SimpleChange();
                         if (properties.size() > 1) {
                             sc.setIs_Optional(true);
@@ -298,10 +329,17 @@ public class ComplexChangesManager {
                             sc.setObjectName("label");
                             sc.setObjectParameter(":-object");
                         }
-                        sc.setSetObjectParameter(true);
+                        if (firstDL == 0) {
+                            sc.setSetObjectParameter(true);
+                        }
                         sc.setSubjectName("subject");
                         sc.setSubjectParameter(":-subject");
-                        sc.setSetSubjectParameter(true);
+                        if (firstDL == 0) {
+                            sc.setSetSubjectParameter(true);
+                            if (!property.contains("http://www.w3.org/2000/01/rdf-schema#label")) { // if it is the classic label, and there is another label to detect, then we want to add the properties to the complex changes
+                                firstDL++;
+                            }
+                        }
                         sc.setSimpleChangeId(propertyId);
                         scList.add(sc);
                     }

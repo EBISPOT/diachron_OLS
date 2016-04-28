@@ -72,6 +72,7 @@ public class HttpRequestHandler {
 
     public String executeHttpDelete(String path, Map<String,String> params) throws IOException, URISyntaxException{
         HttpDelete httpDelete;
+        URI uri = null;
         if(params == null){
             httpDelete = new HttpDelete(path);
         } else {
@@ -82,7 +83,7 @@ public class HttpRequestHandler {
                     uriBuilder.addParameter(key, params.get(key));
                 }
             }
-            URI uri = uriBuilder.build();
+            uri = uriBuilder.build();
             httpDelete = new HttpDelete(uri);
 
         }
@@ -92,7 +93,7 @@ public class HttpRequestHandler {
 
             HttpResponse response = client.execute(httpDelete);
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode() + " on DELETE: " + uri);
             }
 
             return getStringFromInputStream(response.getEntity().getContent());
@@ -103,6 +104,7 @@ public class HttpRequestHandler {
         //gets a set of parameters, builds uri and executes a GET method
         //returns the content of the GET method]
         HttpGet httpGet;
+        URI uri = null;
         if(params == null){
             httpGet = new HttpGet(path);
         } else {
@@ -112,7 +114,7 @@ public class HttpRequestHandler {
                 uriBuilder.addParameter(key, params.get(key));
             }
 
-            URI uri = uriBuilder.build();
+            uri = uriBuilder.build();
             httpGet = new HttpGet(uri);
 
         }
@@ -122,7 +124,7 @@ public class HttpRequestHandler {
 
             HttpResponse response = client.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode() + " on GET: " + uri);
             }
 
             return getStringFromInputStream(response.getEntity().getContent());
@@ -144,7 +146,7 @@ public class HttpRequestHandler {
             HttpClient client = new DefaultHttpClient();
             HttpResponse response = client.execute(httpPost);
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode() + " on POST: " + uri);
             }
 
             return getStringFromInputStream(response.getEntity().getContent());
@@ -156,6 +158,7 @@ public class HttpRequestHandler {
         //gets a set of parameters, builds uri and executes a POST method
         //returns the content of the POST method]
         HttpPost httpPost;
+        URI uri = null;
         if(params == null){
             httpPost = new HttpPost(path);
         } else {
@@ -165,7 +168,7 @@ public class HttpRequestHandler {
                 uriBuilder.addParameter(key, params.get(key));
             }
 
-            URI uri = uriBuilder.build();
+            uri = uriBuilder.build();
             httpPost = new HttpPost(uri);
 
         }
@@ -175,7 +178,7 @@ public class HttpRequestHandler {
 
             HttpResponse response = client.execute(httpPost);
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode() + " on POST: " + uri);
             }
 
             return getStringFromInputStream(response.getEntity().getContent());

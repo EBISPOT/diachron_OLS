@@ -54,7 +54,7 @@ public class Utils {
             }
         } catch (NullPointerException | IOException | URISyntaxException e){
             log.info(e.toString());
-            throw new RuntimeException("Could not retrieve dataset info from the archiver. EXCEPTION: " + e.toString());
+            throw new RuntimeException("Could not retrieve dataset info from the archiver for: " + name + " . EXCEPTION: " + e.toString());
         }
     }
 
@@ -161,7 +161,7 @@ public class Utils {
         }catch (NullPointerException | IOException | URISyntaxException | ParseException e) {
             log.info("Latest " + wantedInfo + " for this dataset: " + datasetID + " was not found");
             log.info(e.toString());
-            throw new RuntimeException("Could not retrieve dataset info from the archiver. EXCEPTION: " + e.toString());
+            throw new RuntimeException("Could not retrieve dataset info from the archiver for dataset: " + datasetID + " . EXCEPTION: " + e.toString());
         }
     }
 

@@ -13,6 +13,8 @@ import uk.ac.ebi.spot.diachron.utils.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -47,19 +49,17 @@ public class StoreChanges {
         this.newVersion = newVersion;
         this.ontologyVersion = ontologyVersion;
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.AM_PM, Calendar.AM);
-        cal.set((int) Integer.parseInt(dateString.split("\\.")[0]), (int) Integer.parseInt(dateString.split("\\.")[1]) - 1 , (int) Integer.parseInt(dateString.split("\\.")[2]));
-        this.date = cal.getTime();
-        int t = Integer.parseInt(mongoPort);
+        try {
+            this.date = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss", Locale.UK).parse(dateString + ".02.00.00");
+
+        } catch (ParseException e) {
+            throw new RuntimeException("Unexpected date formatting problem", e);
+        }
+
+        int port = Integer.parseInt(mongoPort);
 
         //initialize mongo client
-        this.mongoClient = new MongoClient(mongoHostIP, t);
+        this.mongoClient = new MongoClient(mongoHostIP, port);
     }
 
     public String getChanges(){
@@ -67,7 +67,7 @@ public class StoreChanges {
         try {
             changes = new GetChanges(datasetUri,true);
             //TODO: define limit
-            Set<DetChangeTest> changeSet = changes.fetchChangesBetweenVersions(oldVersion, newVersion, null, null, 10000000);
+            Set<DetChangeTest> changeSet = changes.fetchChangesBetweenVersions(oldVersion, newVersion, null, null, 10000000); //this 1000000 can be ignored / does nothing, used in the initial library that got overriden
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(changeSet);
             return json;
@@ -119,6 +119,7 @@ public class StoreChanges {
                 prediacte.clear();
                 subject.clear();
                 subjectValue.clear();
+                boolean hasUnboundedValue = false;
                 JsonNode change = elements.next();
                 if (change.get("changeName") != null) {
                     changeName = change.get("changeName").getTextValue();
@@ -187,6 +188,8 @@ public class StoreChanges {
                                         }
                                         subject = prediacte;
                                     }
+                                } else {
+                                    hasUnboundedValue = true;
                                 }
                             }
                         }
@@ -198,7 +201,7 @@ public class StoreChanges {
                     continue;
                 }
 
-                if (!prediacte.isEmpty() && !subject.isEmpty()) {
+                if (!prediacte.isEmpty() && !subject.isEmpty() && !hasUnboundedValue) {
 
                     Map<String, Collection<String>> propep = new HashMap<>();
                     for (int i = 0; i < prediacte.size(); i++) {
@@ -216,7 +219,7 @@ public class StoreChanges {
                                     .append("changeSubjectUri", changeSubjectUri)
                                     .append("changeProperties", propep)
                     );
-                } else {
+                } else if (!hasUnboundedValue){
                     collection.insertOne(
                             new Document()
                                     .append("changeDate", date)
@@ -291,7 +294,7 @@ public class StoreChanges {
     public static void main(String args[]){
         StoreChanges storeChanges = null;
         try {
-            storeChanges = new StoreChanges("efo","http://www.diachron-fp7.eu/efo","http://www.diachron-fp7.eu/resource/recordset/EFO/1450375796150/3F72F2CCB735199E04A627D5AB935296","http://www.diachron-fp7.eu/resource/recordset/EFO/1453310228798/800040A7DD228D68C2BF3CEE9F8EA0CC","2.68", "2016.01.01");
+            storeChanges = new StoreChanges("enm","http://www.diachron-fp7.eu/enm","http://www.diachron-fp7.eu/resource/recordset/ENM/1454586981152/65E2894B729E92F955E8FEBBB2CD55A4","http://www.diachron-fp7.eu/resource/recordset/ENM/1456917272047/D29A5A076838B070D611F78FE4472CD8","3.0", "2016.02.03");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
