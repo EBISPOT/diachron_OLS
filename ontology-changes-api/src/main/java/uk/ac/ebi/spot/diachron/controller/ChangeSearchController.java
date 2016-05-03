@@ -45,8 +45,9 @@ public class ChangeSearchController {
             PagedResourcesAssembler assembler
     ) throws ResourceNotFoundException {
 
+        Date after = getStartOfDayDate(date);
         Date before = getEndOfDayDate(date);
-        Page<Change> summaries = repository.findByOntologyNameAndChangeDateBetween(ontologyName, date, before, pageable);
+        Page<Change> summaries = repository.findByOntologyNameAndChangeDateBetween(ontologyName, after, before, pageable);
         return new ResponseEntity<>(assembler.toResource(summaries), HttpStatus.OK);
 
     }
@@ -60,10 +61,18 @@ public class ChangeSearchController {
             PagedResourcesAssembler assembler
     ) throws ResourceNotFoundException {
 
+        Date after = getStartOfDayDate(date);
         Date before = getEndOfDayDate(date);
-        Page<Change> summaries = repository.findByOntologyNameAndChangeNameAndChangeDateBetween(ontologyName, changeName, date, before, pageable);
+        Page<Change> summaries = repository.findByOntologyNameAndChangeNameAndChangeDateBetween(ontologyName, changeName, after, before, pageable);
         return new ResponseEntity<>(assembler.toResource(summaries), HttpStatus.OK);
 
+    }
+
+    public Date getStartOfDayDate (Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return getEndOfDayDate(calendar.getTime());
     }
 
     public Date getEndOfDayDate (Date date) {
