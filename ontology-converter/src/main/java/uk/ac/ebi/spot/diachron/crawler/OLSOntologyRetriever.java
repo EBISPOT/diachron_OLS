@@ -3,8 +3,7 @@ package uk.ac.ebi.spot.diachron.crawler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -31,7 +30,7 @@ public class OLSOntologyRetriever {
             conn.connect();
             // handle redirects
             int responseCode = conn.getResponseCode();
-            if (responseCode == 302) {
+            if (responseCode == 302 || responseCode == 301) {
                 String location = conn.getHeaderField("Location");
                 if (location != null) {
                     conn.disconnect();
@@ -52,4 +51,5 @@ public class OLSOntologyRetriever {
             return null;
         }
     }
+
 }
